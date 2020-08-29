@@ -23,7 +23,53 @@ udpPort.on("ready", function() {
             {
                 type: "h",
                 value: new Long(0xFFFFFFFF, 0x7FFFFFFF)
-            }
+            },
+            {
+                type: "d",
+                value: 0.5
+            },
+            {
+                type: "S",
+                value: "symbol"
+            },
+            {
+                type: "c",
+                value: "B"
+            },
+            {
+                type: "r",
+                value: { r: 255, g: 0, b: 0, a: 1.0 }
+            },
+            {
+                type: "m",
+                value: [ 0x91, 0x24, 0x0d ]
+            },
+            {
+                type: 'T',
+                value: true
+            },
+            {
+                type: 'F',
+                value: false
+            },
+            {
+                type: 'N',
+                value: null
+            },
+            {
+                type: 'I',
+                value: 1.0
+            },
+            [
+                {
+                    type: 'f',
+                    value: 1.5
+                },
+                {
+                    type: 'i',
+                    value: 1
+                }
+            ]
         ]
     });
     udpPort.send({

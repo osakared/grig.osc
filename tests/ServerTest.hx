@@ -18,7 +18,17 @@ class ServerTest {
             arguments: [
                 's default',
                 't 2020-08-29 09:49:06',
-                'h 9223372036854775807'
+                'h 9223372036854775807',
+                'd 0.5',
+                'S symbol',
+                'c B',
+                'r 4278190335', // 0xff0000ff
+                'm 2435058944', // 0x91240d00
+                'T true',
+                'F false',
+                'N null',
+                'I inf',
+                '[ [f 1.5,i 1]'
             ],
             messages: []
         },

@@ -8,6 +8,16 @@ enum abstract ArgumentType(String)
     var Blob = 'b';
     var Int64 = 'h';
     var Time = 't';
+    var Double = 'd';
+    var Symbol = 'S';
+    var Char = 'c';
+    var Color = 'r';
+    var Midi = 'm';
+    var True = 'T';
+    var False = 'F';
+    var Nil = 'N';
+    var Infinitum = 'I';
+    var Array = '[';
     var Unknown = '';
 
     @:from static public function fromString(s:String)
@@ -19,6 +29,16 @@ enum abstract ArgumentType(String)
             case 'b': Blob;
             case 'h': Int64;
             case 't': Time;
+            case 'd': Double;
+            case 'S': Symbol;
+            case 'c': Char;
+            case 'r': Color;
+            case 'm': Midi;
+            case 'T': True;
+            case 'F': False;
+            case 'N': Nil;
+            case 'I': Infinitum;
+            case '[': Array;
             default: Unknown;
         }
     }
