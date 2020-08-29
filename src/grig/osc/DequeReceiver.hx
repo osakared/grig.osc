@@ -1,7 +1,6 @@
 package grig.osc;
 
 import haxe.io.Bytes;
-import sys.thread.Deque;
 
 class DequeReceiver implements PacketReceiver
 {

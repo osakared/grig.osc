@@ -3,7 +3,6 @@ package grig.osc;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.Input;
-import sys.thread.Thread;
 
 using StringTools;
 using thx.Int64s;

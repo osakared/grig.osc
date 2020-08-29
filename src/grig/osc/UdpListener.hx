@@ -4,8 +4,6 @@ import haxe.io.Bytes;
 import sys.net.Address;
 import sys.net.Host;
 import sys.net.UdpSocket;
-import sys.thread.Deque;
-import sys.thread.Thread;
 
 class UdpListener
 {
@@ -15,6 +13,7 @@ class UdpListener
     private var socket = new UdpSocket();
     private var running:Bool = false;
     private inline static var BYTES_LENGTH = 2048;
+    private var bytes = Bytes.alloc(BYTES_LENGTH);
 
     private function get_receiver():PacketReceiver
     {
@@ -35,15 +34,17 @@ class UdpListener
     {
         socket.bind(host, port);
         running = true;
-        Thread.create(() -> {
-            var senderAddress = new Address();
-            var bytes = Bytes.alloc(BYTES_LENGTH);
-            while (running) {
-                socket.waitForRead();
-                var length = socket.readFrom(bytes, 0, BYTES_LENGTH, senderAddress);
-                deque.add(bytes.sub(0, length));
-            }
-        });
+        Thread.create(thread);
+    }
+
+    private function thread():Void
+    {
+        var senderAddress = new Address();
+        while (running) {
+            socket.waitForRead();
+            var length = socket.readFrom(bytes, 0, BYTES_LENGTH, senderAddress);
+            deque.push(bytes.sub(0, length));
+        }
     }
 
     /**
