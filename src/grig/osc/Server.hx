@@ -1,5 +1,6 @@
 package grig.osc;
 
+import haxe.io.Bytes;
 import haxe.io.Input;
 
 using StringTools;
@@ -33,9 +34,15 @@ class Server
         var type = readString();
         for (c in type.substr(1).split('')) {
             var type:ArgumentType = c;
-            var val = switch type {
+            var val:Any = switch type {
                 case ArgumentType.Float32:
                     transport.readFloat();
+                case ArgumentType.Int32:
+                    transport.readInt32();
+                case ArgumentType.String:
+                    readString();
+                case ArgumentType.Blob:
+                    readBlob();
                 default:
                     trace(c);
                     null;
@@ -62,5 +69,12 @@ class Server
         if (remainder > 0) transport.read(4 - remainder);
 
         return s;
+    }
+
+    private function readBlob():Bytes
+    {
+        var len = transport.readInt32();
+        len = (len + 3) & ~0x03;
+        return transport.read(len);
     }
 }
