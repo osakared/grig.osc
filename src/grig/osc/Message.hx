@@ -1,16 +1,15 @@
 package grig.osc;
 
-class Message
+class Message extends Packet
 {
-    public var address(default, null):String;
     public var arguments(default, null) = new Array<Argument>();
 
     public function new(address:String)
     {
-        this.address = address;
+        super(address);
     }
 
-    public function toString():String
+    public override function toString():String
     {
         var s = '${this.address} :';
         for (argument in arguments) {

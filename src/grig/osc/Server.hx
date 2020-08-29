@@ -1,6 +1,5 @@
 package grig.osc;
 
-import haxe.Int64;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.Input;
@@ -11,13 +10,16 @@ using thx.Int64s;
 class Server
 {
     private var transport:PacketReceiver;
-
-    public static inline var UNIX_EPOCH_IN_1990 = 2208988800;
-    public static inline var TWO_TO_THE_32ND_POWER = 4294967296;
+    private var callback:OSCCallback = null;
 
     public function new(transport:PacketReceiver)
     {
         this.transport = transport;
+    }
+
+    public function setCallback(callback:OSCCallback):Void
+    {
+        this.callback = callback;
     }
 
     public function waitForMessages():Void
@@ -27,15 +29,15 @@ class Server
             var input = new BytesInput(bytes);
             input.bigEndian = true;
             var s = readString(input);
-            if (s.startsWith('/')) {
-                var message = readMessage(s, input);
-                trace(message.toString());
+            var packet = if (s.startsWith('/')) {
+                readMessage(s, input);
             }
             else if (s.startsWith('#')) {
-                var bundle = readBundle(s, input);
-                trace(bundle.toString());
+                readBundle(s, input);
             }
-            else trace(s);
+            else new Packet(s);
+            trace(packet.toString());
+            if (callback != null) callback(packet);
         }
     }
 
@@ -55,6 +57,10 @@ class Server
                     readString(input);
                 case ArgumentType.Blob:
                     readBlob(input);
+                case ArgumentType.Int64:
+                    readInt64(input);
+                case ArgumentType.Time:
+                    readTime(input);
                 default:
                     trace(c);
                     null;
@@ -110,17 +116,34 @@ class Server
         var secs1990 = readSInt32(input);
         var picoseconds = readSInt32(input);
         if (secs1990 == 0 && picoseconds == 1) return Date.now();
-        var seconds:Int64 = secs1990 - Int64.fromFloat(2208988800);// + picoseconds / TWO_TO_THE_32ND_POWER;
+        var seconds:Int64 = secs1990 - Int64.fromFloat(2208988800) + picoseconds / Int64.fromFloat(4294967296);
         var timestamp:Int64 = seconds * 1000;
         return Date.fromTime(timestamp.toFloat());
     }
 
+    /**
+     * Reads big endian signed int32 as an Int64
+     * @param input 
+     * @return Int64
+     */
     public static function readSInt32(input:Input):Int64
     {
         var b1:Int64 = input.readByte();
         var b2:Int64 = input.readByte();
         var b3:Int64 = input.readByte();
         var b4:Int64 = input.readByte();
-        return (b1 << 24) + (b2 << 16) + (b3 << 8) + b4;
+        return (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
+    }
+
+    /**
+     * Reads big endian Int64
+     * @param input 
+     * @return Int64
+     */
+    public static function readInt64(input:Input):Int64
+    {
+        var b1 = input.readInt32();
+        var b2 = input.readInt32();
+        return Int64.make(b1, b2);
     }
 }
