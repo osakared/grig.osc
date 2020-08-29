@@ -31,11 +31,11 @@ class UdpListener
         socket.bind(host, port);
         Thread.create(() -> {
             var senderAddress = new Address();
+            var bytes = Bytes.alloc(BYTES_LENGTH);
             while (true) {
-                var bytes = Bytes.alloc(BYTES_LENGTH);
                 socket.waitForRead();
-                socket.readFrom(bytes, 0, BYTES_LENGTH, senderAddress);
-                deque.add(bytes);
+                var length = socket.readFrom(bytes, 0, BYTES_LENGTH, senderAddress);
+                deque.add(bytes.sub(0, length));
             }
         });
     }

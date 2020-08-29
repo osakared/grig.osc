@@ -22,6 +22,7 @@ class Server
                 var message = readMessage(s);
                 trace(message.toString());
             }
+            else trace(s.length);
         }
     }
 
@@ -36,6 +37,7 @@ class Server
                 case ArgumentType.Float32:
                     transport.readFloat();
                 default:
+                    trace(c);
                     null;
                 }
             message.arguments.push(new Argument(val, type));
@@ -56,8 +58,8 @@ class Server
             if (b == 0) break;
             s += String.fromCharCode(b);
         }
-        var remainder = 4 - (charsRead % 4);
-        transport.read(remainder);
+        var remainder = charsRead % 4;
+        if (remainder > 0) transport.read(4 - remainder);
 
         return s;
     }
