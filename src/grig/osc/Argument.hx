@@ -10,4 +10,9 @@ class Argument
         this.val = val;
         this.type = type;
     }
+
+    public function toString():String
+    {
+        return '$type $val';
+    }
 }

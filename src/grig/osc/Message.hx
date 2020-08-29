@@ -13,7 +13,7 @@ class Message extends Packet
     {
         var s = '${this.address} :';
         for (argument in arguments) {
-            s += ' ${argument.type} ${argument.val}';
+            s += ' ${argument.toString()}';
         }
         return s;
     }

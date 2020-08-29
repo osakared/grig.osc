@@ -3,6 +3,7 @@ package grig.osc;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.Input;
+import sys.thread.Thread;
 
 using StringTools;
 using thx.Int64s;
@@ -11,6 +12,7 @@ class Server
 {
     private var transport:PacketReceiver;
     private var callback:OSCCallback = null;
+    private var running:Bool = false;
 
     public function new(transport:PacketReceiver)
     {
@@ -22,23 +24,30 @@ class Server
         this.callback = callback;
     }
 
-    public function waitForMessages():Void
+    public function start():Void
     {
-        while (true) {
-            var bytes = transport.getPacket();
-            var input = new BytesInput(bytes);
-            input.bigEndian = true;
-            var s = readString(input);
-            var packet = if (s.startsWith('/')) {
-                readMessage(s, input);
+        running = true;
+        Thread.create(() -> {
+            while (running) {
+                var bytes = transport.getPacket();
+                var input = new BytesInput(bytes);
+                input.bigEndian = true;
+                var s = readString(input);
+                var packet = if (s.startsWith('/')) {
+                    readMessage(s, input);
+                }
+                else if (s.startsWith('#')) {
+                    readBundle(s, input);
+                }
+                else new Packet(s);
+                if (callback != null) callback(packet);
             }
-            else if (s.startsWith('#')) {
-                readBundle(s, input);
-            }
-            else new Packet(s);
-            trace(packet.toString());
-            if (callback != null) callback(packet);
-        }
+        });
+    }
+
+    public function close():Void
+    {
+        running = false;
     }
 
     private static function readMessage(address:String, input:BytesInput):Message

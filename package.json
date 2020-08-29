@@ -1,0 +1,6 @@
+{
+    "name": "grig.osc-tester",
+    "dependencies": {
+        "osc": "2.4.1"
+    }
+}

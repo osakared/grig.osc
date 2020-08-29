@@ -1,7 +1,6 @@
 package grig.osc;
 
 import haxe.io.Bytes;
-import haxe.io.Input;
 import sys.net.Address;
 import sys.net.Host;
 import sys.net.UdpSocket;
@@ -14,6 +13,7 @@ class UdpListener
     private var dequeReceiver:DequeReceiver;
     private var deque = new Deque<Bytes>();
     private var socket = new UdpSocket();
+    private var running:Bool = false;
     private inline static var BYTES_LENGTH = 2048;
 
     private function get_receiver():PacketReceiver
@@ -26,17 +26,33 @@ class UdpListener
         dequeReceiver = new DequeReceiver(deque);
     }
 
+    /**
+     * Start listening on `host` and `port` on a new thread
+     * @param host 
+     * @param port 
+     */
     public function bind(host:Host, port:Int):Void
     {
         socket.bind(host, port);
+        running = true;
         Thread.create(() -> {
             var senderAddress = new Address();
             var bytes = Bytes.alloc(BYTES_LENGTH);
-            while (true) {
+            while (running) {
                 socket.waitForRead();
                 var length = socket.readFrom(bytes, 0, BYTES_LENGTH, senderAddress);
                 deque.add(bytes.sub(0, length));
             }
         });
+    }
+
+    /**
+     * Close socket and stop thread
+     */
+    public function close():Void
+    {
+        running = false;
+        // Should wait first?
+        socket.close();
     }
 }
