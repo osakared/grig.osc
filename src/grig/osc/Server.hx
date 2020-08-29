@@ -1,48 +1,60 @@
 package grig.osc;
 
+import haxe.Int64;
 import haxe.io.Bytes;
+import haxe.io.BytesInput;
 import haxe.io.Input;
 
 using StringTools;
+using thx.Int64s;
 
 class Server
 {
-    private var transport:Input;
+    private var transport:PacketReceiver;
 
-    public function new(transport:Input)
+    public static inline var UNIX_EPOCH_IN_1990 = 2208988800;
+    public static inline var TWO_TO_THE_32ND_POWER = 4294967296;
+
+    public function new(transport:PacketReceiver)
     {
         this.transport = transport;
-        this.transport.bigEndian = true;
     }
 
     public function waitForMessages():Void
     {
         while (true) {
-            var s = readString();
+            var bytes = transport.getPacket();
+            var input = new BytesInput(bytes);
+            input.bigEndian = true;
+            var s = readString(input);
             if (s.startsWith('/')) {
-                var message = readMessage(s);
+                var message = readMessage(s, input);
                 trace(message.toString());
             }
-            else trace(s.length);
+            else if (s.startsWith('#')) {
+                var bundle = readBundle(s, input);
+                trace(bundle.toString());
+            }
+            else trace(s);
         }
     }
 
-    private function readMessage(address:String):Message
+    private static function readMessage(address:String, input:BytesInput):Message
     {
         var message = new Message(address);
 
-        var type = readString();
+        var type = readString(input);
         for (c in type.substr(1).split('')) {
             var type:ArgumentType = c;
             var val:Any = switch type {
                 case ArgumentType.Float32:
-                    transport.readFloat();
+                    input.readFloat();
                 case ArgumentType.Int32:
-                    transport.readInt32();
+                    input.readInt32();
                 case ArgumentType.String:
-                    readString();
+                    readString(input);
                 case ArgumentType.Blob:
-                    readBlob();
+                    readBlob(input);
                 default:
                     trace(c);
                     null;
@@ -53,28 +65,62 @@ class Server
         return message;
     }
 
-    private function readString():String
+    private static function readBundle(address:String, input:BytesInput):Bundle
+    {
+        var time = readTime(input);
+        var bundle = new Bundle(address, time);
+
+        while (input.length - input.position > 0) {
+            input.readInt32();
+            var address = readString(input);
+            var message = readMessage(address, input);
+            bundle.messages.push(message);
+        }
+
+        return bundle;
+    }
+
+    private static function readString(input:BytesInput):String
     {
         // This seems not very efficient
         var s = '';
         var b:Int = 0;
         var charsRead = 0;
         while (true) {
-            b = transport.readByte();
+            b = input.readByte();
             charsRead++;
             if (b == 0) break;
             s += String.fromCharCode(b);
         }
         var remainder = charsRead % 4;
-        if (remainder > 0) transport.read(4 - remainder);
+        if (remainder > 0) input.read(4 - remainder);
 
         return s;
     }
 
-    private function readBlob():Bytes
+    private static function readBlob(input:BytesInput):Bytes
     {
-        var len = transport.readInt32();
+        var len = input.readInt32();
         len = (len + 3) & ~0x03;
-        return transport.read(len);
+        return input.read(len);
+    }
+
+    private static function readTime(input:BytesInput):Date
+    {
+        var secs1990 = readSInt32(input);
+        var picoseconds = readSInt32(input);
+        if (secs1990 == 0 && picoseconds == 1) return Date.now();
+        var seconds:Int64 = secs1990 - Int64.fromFloat(2208988800);// + picoseconds / TWO_TO_THE_32ND_POWER;
+        var timestamp:Int64 = seconds * 1000;
+        return Date.fromTime(timestamp.toFloat());
+    }
+
+    public static function readSInt32(input:Input):Int64
+    {
+        var b1:Int64 = input.readByte();
+        var b2:Int64 = input.readByte();
+        var b3:Int64 = input.readByte();
+        var b4:Int64 = input.readByte();
+        return (b1 << 24) + (b2 << 16) + (b3 << 8) + b4;
     }
 }

@@ -1,4 +1,5 @@
 -cp src
 -cp examples/server
+-lib thx.core
 -main Main
 -cpp bin/server

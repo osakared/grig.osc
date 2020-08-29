@@ -10,20 +10,20 @@ import sys.thread.Thread;
 
 class UdpListener
 {
-    public var input(get, never):Input;
-    private var dequeInput:DequeInput;
+    public var receiver(get, never):PacketReceiver;
+    private var dequeReceiver:DequeReceiver;
     private var deque = new Deque<Bytes>();
     private var socket = new UdpSocket();
     private inline static var BYTES_LENGTH = 2048;
 
-    private function get_input():Input
+    private function get_receiver():PacketReceiver
     {
-        return dequeInput;
+        return dequeReceiver;
     }
 
     public function new()
     {
-        dequeInput = new DequeInput(deque);
+        dequeReceiver = new DequeReceiver(deque);
     }
 
     public function bind(host:Host, port:Int):Void

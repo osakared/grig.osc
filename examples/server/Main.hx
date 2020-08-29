@@ -10,7 +10,7 @@ class Main
     {
         var listener = new UdpListener();
         listener.bind(new Host('0.0.0.0'), 8000);
-        var server = new Server(listener.input);
+        var server = new Server(listener.receiver);
         server.waitForMessages();
     }
 }
