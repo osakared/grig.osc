@@ -15,11 +15,8 @@ class Argument
 
     public function toString():String
     {
-        // This code is brittle and confusing. Basically, it's to help tests pass because Int64 looks different in different targets
-        // All the types that store as Int64 so that the tests pass. There needs to be a better way to do that.
-        var displayVal:String = if ([ArgumentType.Int64, ArgumentType.Color, ArgumentType.Midi].contains(type)) {
-            var i:Int64 = cast val;
-            i.toStr();
+        var displayVal:String = if (Reflect.hasField(val, 'toStr')) {
+            Reflect.callMethod(val, Reflect.field(val, 'toStr'), []);
         } else {
             '${this.val}';
         }
