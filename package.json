@@ -2,5 +2,11 @@
     "name": "grig.osc-tester",
     "dependencies": {
         "osc": "2.4.1"
+    },
+    "devDependencies": {
+        "lix": "^15.9.0"
+    },
+    "scripts": {
+        "postinstall": "lix download"
     }
 }
