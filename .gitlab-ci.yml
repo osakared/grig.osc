@@ -2,9 +2,8 @@ image: osakared/haxe-ci
 
 test:
   script:
-   - lix download
-   - haxe tests.hxml -java bin/java                 && java -jar bin/java/RunTests.jar
-   - haxe tests.hxml -cpp bin/cpp                   && ./bin/cpp/RunTests
+   - npm install
+   - npx haxe tests.hxml -cpp bin/cpp                   && ./bin/cpp/RunTests
 
 release:
   stage: deploy

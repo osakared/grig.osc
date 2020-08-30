@@ -15,4 +15,3 @@ script:
   - npx haxelib run travix cpp
   - npx haxelib run travix hl
   - npx haxelib run travix neko
-  - npx haxelib run travix java
