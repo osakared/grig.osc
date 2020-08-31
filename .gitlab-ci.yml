@@ -3,6 +3,7 @@ image: osakared/haxe-ci
 test:
   script:
    - npm install
+   - npx haxe tests.hxml -neko bin/tests.n              && neko ./bin/tests.n
    - npx haxe tests.hxml -cpp bin/cpp                   && ./bin/cpp/RunTests
 
 release:
