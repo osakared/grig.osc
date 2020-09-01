@@ -17,7 +17,7 @@ class ServerTest {
             address: '/s_new',
             arguments: [
                 's default',
-                't 2020-08-29 09:49:06',
+                't 2020-08-29 16:49:06',
                 'h 9223372036854775807',
                 'd 0.5',
                 'S symbol',
