@@ -7,6 +7,6 @@
         "lix": "^15.9.0"
     },
     "scripts": {
-        "postinstall": "lix download"
+        "postinstall": "npx lix download"
     }
 }
