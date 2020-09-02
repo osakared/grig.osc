@@ -18,7 +18,7 @@ udpPort.on("ready", function() {
             },
             {
                 type: "t",
-                value: osc.timeTag(0, 1598719746396)
+                value: osc.timeTag(0, 1599023982510)
             },
             {
                 type: "h",

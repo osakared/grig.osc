@@ -4,6 +4,7 @@ test:
   script:
    - npm install
    - npx lix download
+   - export TZ='America/Los_Angeles'
    - npx haxe tests.hxml -cpp bin/cpp                   && ./bin/cpp/RunTests
 
 release:

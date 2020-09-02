@@ -12,6 +12,6 @@ install:
   - npm install
 
 script:
+  - export TZ='America/Los_Angeles'
   - npx haxelib run travix cpp
   - npx haxelib run travix hl
-  - npx haxelib run travix neko
