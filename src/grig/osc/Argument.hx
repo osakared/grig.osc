@@ -15,11 +15,6 @@ class Argument
 
     public function toString():String
     {
-        var displayVal:String = if (Reflect.hasField(val, 'toStr')) {
-            Reflect.callMethod(val, Reflect.field(val, 'toStr'), []);
-        } else {
-            '${this.val}';
-        }
-        return '$type $displayVal';
+        return '$type $val';
     }
 }

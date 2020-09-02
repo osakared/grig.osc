@@ -6,6 +6,7 @@ test:
    - npx lix download
    - export TZ='America/Los_Angeles'
    - npx haxe tests.hxml -cpp bin/cpp                   && ./bin/cpp/RunTests
+   - npx haxe tests.hxml -hl bin/tests.hl               && npx hl ./bin/tests.hl
 
 release:
   stage: deploy

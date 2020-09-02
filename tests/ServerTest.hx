@@ -22,8 +22,8 @@ class ServerTest {
                 'd 0.5',
                 'S symbol',
                 'c B',
-                'r 4278190335', // 0xff0000ff
-                'm 2435058944', // 0x91240d00
+                'r 0xFF0000FF', // 0xff0000ff
+                'm 0x91240D00', // 0x91240d00
                 'T true',
                 'F false',
                 'N null',

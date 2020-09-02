@@ -62,7 +62,7 @@ class Server
             case ArgumentType.Blob:
                 readBlob(input);
             case ArgumentType.Int64:
-                readInt64(input);
+                return new Int64Argument(readInt64(input));
             case ArgumentType.Time:
                 readTime(input);
             case ArgumentType.Double:
@@ -72,9 +72,9 @@ class Server
             case ArgumentType.Char:
                 readChar(input);
             case ArgumentType.Color:
-                readUInt32(input);
+                return new HexArgument(readUInt32(input), type);
             case ArgumentType.Midi:
-                readUInt32(input);
+                return new HexArgument(readUInt32(input), type);
             case ArgumentType.True:
                 true;
             case ArgumentType.False:
@@ -159,8 +159,8 @@ class Server
 
     private static function readTime(input:BytesInput):Date
     {
-        var secs1990 = readUInt32(input).toFloat();
-        var picoseconds = readUInt32(input).toFloat();
+        var secs1990 = Int64.make(0, readUInt32(input)).toFloat();
+        var picoseconds = Int64.make(0, readUInt32(input)).toFloat();
         if (secs1990 == 0 && picoseconds == 1) return Date.now();
         var seconds:Float = secs1990 - 2208988800 + picoseconds / 4294967296;
         return Date.fromTime(seconds * 1000.0);
@@ -171,12 +171,12 @@ class Server
      * @param input 
      * @return Int64
      */
-    public static function readUInt32(input:Input):Int64
+    public static function readUInt32(input:Input):Int
     {
-        var b1:Int64 = input.readByte();
-        var b2:Int64 = input.readByte();
-        var b3:Int64 = input.readByte();
-        var b4:Int64 = input.readByte();
+        var b1 = input.readByte();
+        var b2 = input.readByte();
+        var b3 = input.readByte();
+        var b4 = input.readByte();
         return (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
     }
 
