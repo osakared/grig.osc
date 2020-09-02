@@ -1,0 +1,21 @@
+{
+  "name": "grig.osc",
+  "url" : "https://grig.tech/",
+  "license": "MIT",
+  "tags": [
+    "osc",
+    "midi",
+    "audio",
+    "sound"
+  ],
+  "description": "Cross-target OSC (Open Sound Control) support.",
+  "classPath": "src",
+  "contributors": [
+    "thomasjwebb"
+  ],
+  "releasenote": "Initial release",
+  "version": "0.0.1",
+  "dependencies": {
+    "thx.core": "0.44.0"
+  }
+}
