@@ -7,6 +7,7 @@ test:
    - export TZ='America/Los_Angeles'
    - npx haxe tests.hxml -cpp bin/cpp                   && ./bin/cpp/RunTests
    - npx haxe tests.hxml -hl bin/tests.hl               && npx hl ./bin/tests.hl
+   - npx haxe tests.hxml -neko bin/tests.n              && npx neko bin/tests.n
 
 release:
   stage: deploy
