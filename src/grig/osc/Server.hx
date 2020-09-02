@@ -1,5 +1,6 @@
 package grig.osc;
 
+import grig.osc.OSCCallback;
 import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.Input;
@@ -10,17 +11,48 @@ using thx.Int64s;
 class Server
 {
     private var transport:PacketReceiver;
-    private var callback:OSCCallback = null;
+    private var callbacks = new Array<Callback>();
     private var running:Bool = false;
+
+    public var numCallbacks(get, null):Int;
+
+    private function get_numCallbacks():Int
+    {
+        return callbacks.length;
+    }
 
     public function new(transport:PacketReceiver)
     {
         this.transport = transport;
     }
 
-    public function setCallback(callback:OSCCallback):Void
+    /**
+     * Registers a callback with optional pattern, which can contain regex
+     * @param callback 
+     * @param pattern String containing 
+     */
+    public function registerCallback(callback:OSCCallback, pattern:String = '', isRegex:Bool = false, argumentTypes:Array<ArgumentType> = null):Void
     {
-        this.callback = callback;
+        callbacks.push(new Callback(callback, pattern, isRegex, argumentTypes));
+    }
+
+    public function deregisterCallbacks(pattern:String):Void
+    {
+        callbacks = [for (callback in callbacks) {
+            if (callback.pattern != pattern) callback;
+        }];
+    }
+
+    public function deregisterAllCallbacks():Void
+    {
+        callbacks = [];
+    }
+
+    public function dispatchMessage(message:Message):Void
+    {
+        for (callback in callbacks) {
+            callback.matchAndCall(message);
+        }
     }
 
     public function start():Void
@@ -32,14 +64,14 @@ class Server
                 var input = new BytesInput(bytes);
                 input.bigEndian = true;
                 var s = readString(input);
-                var packet = if (s.startsWith('/')) {
-                    readMessage(s, input);
+                if (s.startsWith('/')) {
+                    dispatchMessage(readMessage(s, input));
                 }
                 else if (s.startsWith('#')) {
-                    readBundle(s, input);
+                    for (message in readBundle(s, input).messages) {
+                        dispatchMessage(message);
+                    }
                 }
-                else new Packet(s);
-                if (callback != null) callback(packet);
             }
         });
     }
@@ -84,7 +116,6 @@ class Server
             case ArgumentType.Infinitum:
                 Math.POSITIVE_INFINITY;
             default:
-                trace(typeString);
                 null;
         }
         return new Argument(val, type);

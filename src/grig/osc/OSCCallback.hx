@@ -1,3 +1,3 @@
 package grig.osc;
 
-typedef OSCCallback = (packet:Packet)->Void;
+typedef OSCCallback = (message:Message)->Void;

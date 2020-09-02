@@ -18,7 +18,7 @@ enum abstract ArgumentType(String)
     var Nil = 'N';
     var Infinitum = 'I';
     var Array = '[';
-    var Unknown = '';
+    var None = '';
 
     @:from static public function fromString(s:String)
     {
@@ -39,7 +39,7 @@ enum abstract ArgumentType(String)
             case 'N': Nil;
             case 'I': Infinitum;
             case '[': Array;
-            default: Unknown;
+            default: None;
         }
     }
 }

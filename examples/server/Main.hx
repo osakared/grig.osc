@@ -11,8 +11,8 @@ class Main
         var listener = new UdpListener();
         listener.bind(new Host('0.0.0.0'), 8000);
         var server = new Server(listener.receiver);
-        server.setCallback((packet) -> {
-            trace(packet.toString());
+        server.registerCallback((message) -> {
+            trace(message.toString());
         });
         server.start();
         #if (sys && !nodejs)

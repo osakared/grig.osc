@@ -1,9 +1,21 @@
 var osc = require("osc");
 var Long = require("long");
 
+if (process.argv.length < 3) {
+    console.log('Usage: node testServer.js PORT_NUMBER');
+    process.exit(1);
+}
+
+port = parseInt(process.argv[2])
+
+if (isNaN(port)) {
+    console.log('Invalid number');
+    process.exit(2);
+}
+
 var udpPort = new osc.UDPPort({
     remoteAddress: "127.0.0.1",
-    remotePort: 8000
+    remotePort: port
 });
 
 udpPort.open();

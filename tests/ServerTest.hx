@@ -29,26 +29,19 @@ class ServerTest {
                 'N null',
                 'I inf',
                 '[ [f 1.5,i 1]'
-            ],
-            messages: []
+            ]
         },
         {
-            address: '#bundle',
-            arguments: [],
-            messages: [
-                {
-                    address: '/carrier/frequency',
-                    arguments: [ 'f 440' ]
-                },
-                {
-                    address: '/carrier/amplitude',
-                    arguments: [ 'f 0.5' ]
-                },
-                {
-                    address: '/algorithm',
-                    arguments: [ 'i 7' ]
-                }
-            ]
+            address: '/carrier/frequency',
+            arguments: [ 'f 440' ]
+        },
+        {
+            address: '/carrier/amplitude',
+            arguments: [ 'f 0.5' ]
+        },
+        {
+            address: '/algorithm',
+            arguments: [ 'i 7' ]
         }
     ];
 
@@ -56,45 +49,63 @@ class ServerTest {
     {
     }
 
+    public function testRegister()
+    {
+        var asserts = new AssertionBuffer();
+        var listener = new UdpListener();
+        listener.bind(new Host('0.0.0.0'), 8001);
+        var server = new Server(listener.receiver);
+        asserts.assert(server.numCallbacks == 0);
+        server.registerCallback((message) -> {}, '/fader/1');
+        asserts.assert(server.numCallbacks == 1);
+        server.registerCallback((message) -> {}, '/fader/2');
+        asserts.assert(server.numCallbacks == 2);
+        server.deregisterCallbacks('/fader/1');
+        asserts.assert(server.numCallbacks == 1);
+        server.deregisterAllCallbacks();
+        asserts.assert(server.numCallbacks == 0);
+        server.close();
+        return asserts.done();
+    }
+
+    public function testFilter()
+    {
+        // Ensure this is skipped for platforms udp doesn't work
+        var listener = new UdpListener();
+        var port = 8002;
+        listener.bind(new Host('0.0.0.0'), port);
+        var server = new Server(listener.receiver);
+        var messageCount = 0;
+        server.registerCallback((message) -> {
+            messageCount++;
+        }, '^/carrier/.*$', true, [ArgumentType.Float32]);
+        server.start();
+        Sys.command('node tests/testServer.js $port');
+        server.close();
+        return assert(messageCount == 2);
+    }
+
     public function testUDP()
     {
         // Ensure this is skipped for platforms udp doesn't work
         var asserts = new AssertionBuffer();
         var listener = new UdpListener();
-        listener.bind(new Host('0.0.0.0'), 8000);
+        var port = 8000;
+        listener.bind(new Host('0.0.0.0'), port);
         var server = new Server(listener.receiver);
         var i = 0;
-        server.setCallback((packet) -> {
+        server.registerCallback((message) -> {
             var testValues = serverTestValues[i++];
-            asserts.assert(testValues.address == packet.address);
-            if (testValues.arguments.length > 0) {
-                asserts.assert(Std.is(packet, Message));
-                var message:Message = cast packet;
-                asserts.assert(testValues.messages.length == 0);
-                asserts.assert(testValues.arguments.length == message.arguments.length);
-                if (testValues.arguments.length != message.arguments.length) return;
-                for (j in 0...testValues.arguments.length) {
-                    asserts.assert(testValues.arguments[j] == message.arguments[j].toString());
-                }
-            } else if (testValues.messages.length > 0) {
-                asserts.assert(Std.is(packet, Bundle));
-                var bundle:Bundle = cast packet;
-                asserts.assert(testValues.messages.length == bundle.messages.length);
-                if (testValues.messages.length != bundle.messages.length) return;
-                for (j in 0...testValues.messages.length) {
-                    var testMessage = testValues.messages[j];
-                    var message = bundle.messages[j];
-                    asserts.assert(testMessage.address == message.address);
-                    asserts.assert(testMessage.arguments.length == message.arguments.length);
-                    if (testMessage.arguments.length != message.arguments.length) return;
-                    for (k in 0...testMessage.arguments.length) {
-                        asserts.assert(testMessage.arguments[k] == message.arguments[k].toString());
-                    }
-                }
+            asserts.assert(testValues.address == message.address);
+            asserts.assert(testValues.arguments.length == message.arguments.length);
+            if (testValues.arguments.length != message.arguments.length) return;
+            for (j in 0...testValues.arguments.length) {
+                asserts.assert(testValues.arguments[j] == message.arguments[j].toString());
             }
         });
         server.start();
-        Sys.command('node tests/testServer.js');
+        Sys.command('node tests/testServer.js $port');
+        server.close();
         return asserts.done();
     }
 
