@@ -159,12 +159,11 @@ class Server
 
     private static function readTime(input:BytesInput):Date
     {
-        var secs1990 = readUInt32(input);
-        var picoseconds = readUInt32(input);
+        var secs1990 = readUInt32(input).toFloat();
+        var picoseconds = readUInt32(input).toFloat();
         if (secs1990 == 0 && picoseconds == 1) return Date.now();
-        var seconds:Int64 = secs1990 - Int64.fromFloat(2208988800) + picoseconds / Int64.fromFloat(4294967296);
-        var timestamp:Int64 = seconds * 1000;
-        return Date.fromTime(timestamp.toFloat());
+        var seconds:Float = secs1990 - 2208988800 + picoseconds / 4294967296;
+        return Date.fromTime(seconds * 1000.0);
     }
 
     /**
