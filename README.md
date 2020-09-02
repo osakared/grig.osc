@@ -11,7 +11,7 @@ haxe implementation of OSC (open sound control)
 Transports/targets supported so far:
 
 | Target   | UDP Client | UDP Server | TCP Client | TCP Server | WebSocket Client | WebSocket Server | Threading |
-|----------------------------------------------------------------------------------------------------|-----------|
+| -------- | ---------- | ---------- | ---------- | ---------- | ---------------- | ---------------- | --------- |
 | c++      |            | X          |            |            |                  |                  | X         |
 | hl       |            | X          |            |            |                  |                  | X         |
 | python   |            |            |            |            |                  |                  |           |
