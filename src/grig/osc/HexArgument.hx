@@ -1,18 +1,19 @@
 package grig.osc;
 
 using grig.osc.InputTypes;
-import haxe.io.Input;
 
 class HexArgument extends Argument
 {
+    public var val(default, null):Int;
+
     public function new(val:Int, type:ArgumentType)
     {
-        super(val, type);
+        super(type);
+        this.val = val;
     }
 
-    public override function toString():String
+    private override function get_value():String
     {
-        var displayVal:Int = cast val;
-        return '$type 0x${StringTools.hex(displayVal, 8)}';
+        return '0x${StringTools.hex(val, 8)}';
     }
 }

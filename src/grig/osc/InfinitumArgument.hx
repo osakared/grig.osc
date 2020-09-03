@@ -4,6 +4,11 @@ class InfinitumArgument extends Argument
 {
     public function new()
     {
-        super(Math.POSITIVE_INFINITY, ArgumentType.Infinitum);
+        super(ArgumentType.Infinitum);
+    }
+
+    override private function get_value():String
+    {
+        return 'inf';
     }
 }

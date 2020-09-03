@@ -2,8 +2,16 @@ package grig.osc;
 
 class SymbolArgument extends Argument
 {
-    public function new(str:String)
+    public var val(default, null):String;
+
+    public function new(val:String)
     {
-        super(str, ArgumentType.Symbol);
+        super(ArgumentType.Symbol);
+        this.val = val;
+    }
+
+    override private function get_value():String
+    {
+        return val;
     }
 }

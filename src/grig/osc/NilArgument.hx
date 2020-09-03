@@ -4,6 +4,11 @@ class NilArgument extends Argument
 {
     public function new()
     {
-        super(null, ArgumentType.Nil);
+        super(ArgumentType.Nil);
+    }
+
+    override private function get_value():String
+    {
+        return 'null';
     }
 }

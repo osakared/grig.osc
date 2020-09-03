@@ -2,8 +2,16 @@ package grig.osc;
 
 class BooleanArgument extends Argument
 {
-    public function new(truth:Bool)
+    public var val(default, null):Bool;
+
+    public function new(val:Bool)
     {
-        super(truth, if (truth) ArgumentType.True else ArgumentType.False);
+        super(if (val) ArgumentType.True else ArgumentType.False);
+        this.val = val;
+    }
+
+    override private function get_value():String
+    {
+        return '$val';
     }
 }

@@ -2,8 +2,16 @@ package grig.osc;
 
 class Float32Argument extends Argument
 {
-    public function new(floatVal:Float)
+    public var val(default, null):Float;
+
+    public function new(val:Float)
     {
-        super(floatVal, ArgumentType.Float32);
+        super(ArgumentType.Float32);
+        this.val = val;
+    }
+
+    override private function get_value():String
+    {
+        return '$val';
     }
 }

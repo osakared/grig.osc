@@ -2,8 +2,16 @@ package grig.osc;
 
 class StringArgument extends Argument
 {
-    public function new(str:String)
+    public var val(default, null):String;
+
+    public function new(val:String)
     {
-        super(str, ArgumentType.String);
+        super(ArgumentType.String);
+        this.val = val;
+    }
+
+    override private function get_value():String
+    {
+        return val;
     }
 }

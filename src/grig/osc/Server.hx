@@ -115,7 +115,7 @@ class Server
             case ArgumentType.Infinitum:
                 new InfinitumArgument();
             default:
-                new Argument(null, type);
+                new Argument(type);
         }
     }
 
@@ -130,7 +130,7 @@ class Server
             if (inArray) {
                 if (c == ']') {
                     inArray = false;
-                    message.arguments.push(new Argument(subArguments, ArgumentType.Array));
+                    message.arguments.push(new ArrayArgument(subArguments));
                     subArguments = null;
                     continue;
                 }

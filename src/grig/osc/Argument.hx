@@ -1,21 +1,24 @@
 package grig.osc;
 
-import haxe.io.Input;
 using thx.Int64s;
 
 class Argument
 {
-    public var val(default, null):Any;
     public var type(default, null):ArgumentType;
+    public var value(get, never):String;
 
-    public function new(val:Any, type:ArgumentType)
+    private function get_value():String
     {
-        this.val = val;
+        return '';
+    }
+
+    public function new(type:ArgumentType)
+    {
         this.type = type;
     }
 
     public function toString():String
     {
-        return '$type $val';
+        return '$type $value';
     }
 }

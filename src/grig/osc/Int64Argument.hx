@@ -4,14 +4,16 @@ using thx.Int64s;
 
 class Int64Argument extends Argument
 {
+    var val:Int64;
+
     public function new(val:Int64)
     {
-        super(val, ArgumentType.Int64);
+        super(ArgumentType.Int64);
+        this.val = val;
     }
 
-    public override function toString():String
+    private override function get_value():String
     {
-        var displayVal:Int64 = cast val;
-        return '$type ${displayVal.toStr()}';
+        return val.toStr();
     }
 }

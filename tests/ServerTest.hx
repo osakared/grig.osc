@@ -28,7 +28,7 @@ class ServerTest {
                 'F false',
                 'N null',
                 'I inf',
-                '[ [f 1.5,i 1]'
+                '[ [f 1.5, i 1]'
             ]
         },
         {

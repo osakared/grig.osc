@@ -2,8 +2,16 @@ package grig.osc;
 
 class DoubleArgument extends Argument
 {
-    public function new(doubleVal:Float)
+    public var val(default, null):Float;
+
+    public function new(val:Float)
     {
-        super(doubleVal, ArgumentType.Double);
+        super(ArgumentType.Double);
+        this.val = val;
+    }
+
+    override private function get_value():String
+    {
+        return '$val';
     }
 }
