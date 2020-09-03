@@ -5,6 +5,7 @@ import haxe.io.Bytes;
 import haxe.io.BytesInput;
 import haxe.io.Input;
 
+using grig.osc.InputTypes;
 using StringTools;
 using thx.Int64s;
 
@@ -104,9 +105,9 @@ class Server
             case ArgumentType.Char:
                 readChar(input);
             case ArgumentType.Color:
-                return new HexArgument(readUInt32(input), type);
+                return HexArgument.fromInput(input, type);
             case ArgumentType.Midi:
-                return new HexArgument(readUInt32(input), type);
+                return HexArgument.fromInput(input, type);
             case ArgumentType.True:
                 true;
             case ArgumentType.False:
@@ -190,25 +191,11 @@ class Server
 
     private static function readTime(input:BytesInput):Date
     {
-        var secs1990 = Int64.make(0, readUInt32(input)).toFloat();
-        var picoseconds = Int64.make(0, readUInt32(input)).toFloat();
+        var secs1990 = Int64.make(0, input.readUInt32()).toFloat();
+        var picoseconds = Int64.make(0, input.readUInt32()).toFloat();
         if (secs1990 == 0 && picoseconds == 1) return Date.now();
         var seconds:Float = secs1990 - 2208988800 + picoseconds / 4294967296;
         return Date.fromTime(seconds * 1000.0);
-    }
-
-    /**
-     * Reads big endian signed int32 as an Int64
-     * @param input 
-     * @return Int64
-     */
-    public static function readUInt32(input:Input):Int
-    {
-        var b1 = input.readByte();
-        var b2 = input.readByte();
-        var b3 = input.readByte();
-        var b4 = input.readByte();
-        return (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
     }
 
     /**

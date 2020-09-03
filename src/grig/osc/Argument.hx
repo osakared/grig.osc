@@ -1,5 +1,6 @@
 package grig.osc;
 
+import haxe.io.Input;
 using thx.Int64s;
 
 class Argument
