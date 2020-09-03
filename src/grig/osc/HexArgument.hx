@@ -10,11 +10,6 @@ class HexArgument extends Argument
         super(val, type);
     }
 
-    public static function fromInput(input:Input, type:ArgumentType):HexArgument
-    {
-        return new HexArgument(input.readUInt32(), type);
-    }
-
     public override function toString():String
     {
         var displayVal:Int = cast val;

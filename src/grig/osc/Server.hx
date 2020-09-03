@@ -1,9 +1,7 @@
 package grig.osc;
 
 import grig.osc.OSCCallback;
-import haxe.io.Bytes;
 import haxe.io.BytesInput;
-import haxe.io.Input;
 
 using grig.osc.InputTypes;
 using StringTools;
@@ -64,7 +62,7 @@ class Server
                 var bytes = transport.getPacket();
                 var input = new BytesInput(bytes);
                 input.bigEndian = true;
-                var s = readString(input);
+                var s = input.readMultipleFourString();
                 if (s.startsWith('/')) {
                     dispatchMessage(readMessage(s, input));
                 }
@@ -85,48 +83,47 @@ class Server
     private static function toArgument(typeString:String, input:BytesInput):Argument
     {
         var type:ArgumentType = typeString;
-        var val:Any = switch type {
+        return switch type {
             case ArgumentType.Float32:
-                input.readFloat();
+                input.readFloat32Argument();
             case ArgumentType.Int32:
-                input.readInt32();
+                input.readInt32Argument();
             case ArgumentType.String:
-                readString(input);
+                input.readStringArgument();
             case ArgumentType.Blob:
-                readBlob(input);
+                input.readBlobArgument();
             case ArgumentType.Int64:
-                return new Int64Argument(readInt64(input));
+                input.readInt64Argument();
             case ArgumentType.Time:
-                readTime(input);
+                input.readTimeArgument();
             case ArgumentType.Double:
-                input.readDouble();
+                input.readDoubleArgument();
             case ArgumentType.Symbol:
-                readString(input);
+                input.readSymbolArgument();
             case ArgumentType.Char:
-                readChar(input);
+                input.readCharArgument();
             case ArgumentType.Color:
-                return HexArgument.fromInput(input, type);
+                input.readColorArgument();
             case ArgumentType.Midi:
-                return HexArgument.fromInput(input, type);
+                input.readMidiArgument();
             case ArgumentType.True:
-                true;
+                new BooleanArgument(true);
             case ArgumentType.False:
-                false;
+                new BooleanArgument(false);
             case ArgumentType.Nil:
-                null;
+                new NilArgument();
             case ArgumentType.Infinitum:
-                Math.POSITIVE_INFINITY;
+                new InfinitumArgument();
             default:
-                null;
+                new Argument(null, type);
         }
-        return new Argument(val, type);
     }
 
     private static function readMessage(address:String, input:BytesInput):Message
     {
         var message = new Message(address);
 
-        var type = readString(input);
+        var type = input.readMultipleFourString();
         var inArray = false;
         var subArguments:Array<Argument> = null;
         for (c in type.substr(1).split('')) {
@@ -151,68 +148,16 @@ class Server
 
     private static function readBundle(address:String, input:BytesInput):Bundle
     {
-        var time = readTime(input);
+        var time = input.readTime();
         var bundle = new Bundle(address, time);
 
         while (input.length - input.position > 0) {
             input.readInt32();
-            var address = readString(input);
+            var address = input.readMultipleFourString();
             var message = readMessage(address, input);
             bundle.messages.push(message);
         }
 
         return bundle;
-    }
-
-    private static function readString(input:BytesInput):String
-    {
-        // This seems not very efficient
-        var s = '';
-        var b:Int = 0;
-        var charsRead = 0;
-        while (true) {
-            b = input.readByte();
-            charsRead++;
-            if (b == 0) break;
-            s += String.fromCharCode(b);
-        }
-        var remainder = charsRead % 4;
-        if (remainder > 0) input.read(4 - remainder);
-
-        return s;
-    }
-
-    private static function readBlob(input:BytesInput):Bytes
-    {
-        var len = input.readInt32();
-        len = (len + 3) & ~0x03;
-        return input.read(len);
-    }
-
-    private static function readTime(input:BytesInput):Date
-    {
-        var secs1990 = Int64.make(0, input.readUInt32()).toFloat();
-        var picoseconds = Int64.make(0, input.readUInt32()).toFloat();
-        if (secs1990 == 0 && picoseconds == 1) return Date.now();
-        var seconds:Float = secs1990 - 2208988800 + picoseconds / 4294967296;
-        return Date.fromTime(seconds * 1000.0);
-    }
-
-    /**
-     * Reads big endian Int64
-     * @param input 
-     * @return Int64
-     */
-    public static function readInt64(input:Input):Int64
-    {
-        var b1 = input.readInt32();
-        var b2 = input.readInt32();
-        return Int64.make(b1, b2);
-    }
-
-    private static function readChar(input:BytesInput):String
-    {
-        var val = input.readInt32();
-        return String.fromCharCode(val);
     }
 }
