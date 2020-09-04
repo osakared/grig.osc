@@ -46,6 +46,8 @@ class ServerTest
         }
     ];
 
+    private var port = 8000;
+
     public function new()
     {
     }
@@ -54,7 +56,7 @@ class ServerTest
     {
         var asserts = new AssertionBuffer();
         var listener = new UdpListener();
-        listener.bind(new Host('0.0.0.0'), 8001);
+        listener.bind(new Host('0.0.0.0'), port++);
         var server = new Server(listener.receiver);
         asserts.assert(server.numCallbacks == 0);
         server.registerCallback((message) -> {}, '/fader/1');
@@ -73,7 +75,7 @@ class ServerTest
     {
         // Ensure this is skipped for platforms udp doesn't work
         var listener = new UdpListener();
-        var port = 8002;
+        port++;
         listener.bind(new Host('0.0.0.0'), port);
         var server = new Server(listener.receiver);
         var messageCount = 0;
@@ -91,7 +93,7 @@ class ServerTest
         // Ensure this is skipped for platforms udp doesn't work
         var asserts = new AssertionBuffer();
         var listener = new UdpListener();
-        var port = 8000;
+        port++;
         listener.bind(new Host('0.0.0.0'), port);
         var server = new Server(listener.receiver);
         var i = 0;

@@ -14,13 +14,15 @@ using StringTools;
 @asserts
 class ClientTest
 {
+    private var port = 9000;
+
     public function new()
     {
     }
 
     public function testRegister()
     {
-        var port = 8000;
+        port++;
         var packetSender = new UdpPacketSender(new Host('localhost'), port);
         var client = new Client(packetSender);
         var clientTester = new Process('npx', ['node', 'tests/testClient.js', '$port']);
