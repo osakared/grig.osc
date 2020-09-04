@@ -8,7 +8,8 @@ class RunTests {
     static function main()
     {
         Runner.run(TestBatch.make([
-            new ServerTest(),
+            // new ServerTest(),
+            new ClientTest(),
         ])).handle(Runner.exit);
     }
 

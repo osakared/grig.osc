@@ -21,4 +21,8 @@ class Argument
     {
         return '$type $value';
     }
+
+    public function write(output:haxe.io.Output):Void
+    {
+    }
 }

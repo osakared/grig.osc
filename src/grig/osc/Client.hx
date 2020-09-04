@@ -2,6 +2,8 @@ package grig.osc;
 
 import haxe.io.BytesOutput;
 
+using grig.osc.OutputTypes;
+
 class Client
 {
     private var sender:PacketSender;
@@ -14,9 +16,17 @@ class Client
     public function sendMessage(message:Message):Void
     {
         var output = new BytesOutput();
+        output.bigEndian = true;
 
-        output.writeString(message.address);
+        output.writeMultipleFourString(message.address);
         writeTypeString(message, output);
+
+        for (argument in message.arguments) {
+            argument.write(output);
+        }
+
+        output.close();
+        sender.sendPacket(output.getBytes());
     }
 
     private function writeTypeString(message:Message, output:BytesOutput):Void
@@ -25,25 +35,25 @@ class Client
 
         for (argument in message.arguments) {
             if (argument.type == ArgumentType.Array) {
+                var arrayArgument:ArrayArgument = cast argument;
                 typeString += '[';
-                var subArguments:Array<Argument> = cast argument.val;
-                for (subArgument in subArguments) {
+                for (subArgument in arrayArgument.arguments) {
                     typeString += subArgument.type;
                 }
                 typeString += ']';
             } else typeString += argument.type;
         }
 
-        output.writeString(typeString);
+        output.writeMultipleFourString(typeString);
     }
 
-    private function writeArgument(argument:Argument, output:BytesOutput):Void
-    {
-        // switch argument.type {
-        //     case ArgumentType.Array:
+    // private function writeArgument(argument:Argument, output:BytesOutput):Void
+    // {
+    //     switch argument.type {
+    //         case ArgumentType.Array:
 
-        // }
-    }
+    //     }
+    // }
 
-    private function writeArray(argument:)
+    // private function writeArray(argument:)
 }

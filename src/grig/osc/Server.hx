@@ -35,6 +35,18 @@ class Server
         callbacks.push(new Callback(callback, pattern, isRegex, argumentTypes));
     }
 
+    /**
+     * Convenience function to just expect a single float callback
+     */
+    public function registerFloat32Callback(callback:(value:Float)->Void, pattern:String):Void
+    {
+        callbacks.push(new Callback((message) -> {
+            if (!Std.isOfType(message, Float32Argument)) return;
+            var argument:Float32Argument = cast message;
+            callback(argument.val);
+        }, pattern, false, [ArgumentType.Float32]));
+    }
+    
     public function deregisterCallbacks(pattern:String):Void
     {
         callbacks = [for (callback in callbacks) {
