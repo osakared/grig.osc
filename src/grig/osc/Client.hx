@@ -18,15 +18,42 @@ class Client
         var output = new BytesOutput();
         output.bigEndian = true;
 
+        writeMessage(message, output);
+
+        output.close();
+        sender.sendPacket(output.getBytes());
+    }
+
+    public function sendBundle(bundle:Bundle):Void
+    {
+        var output = new BytesOutput();
+        output.bigEndian = true;
+
+        output.writeMultipleFourString(bundle.address);
+        output.writeTime(bundle.time);
+
+        for (message in bundle.messages) {
+            var messageOutput = new BytesOutput();
+            messageOutput.bigEndian = true;
+            writeMessage(message, messageOutput);
+            messageOutput.close();
+            var messageBytes = messageOutput.getBytes();
+            output.writeInt32(messageBytes.length);
+            output.write(messageBytes);
+        }
+
+        output.close();
+        sender.sendPacket(output.getBytes());
+    }
+
+    private function writeMessage(message:Message, output:BytesOutput):Void
+    {
         output.writeMultipleFourString(message.address);
         writeTypeString(message, output);
 
         for (argument in message.arguments) {
             argument.write(output);
         }
-
-        output.close();
-        sender.sendPacket(output.getBytes());
     }
 
     private function writeTypeString(message:Message, output:BytesOutput):Void
@@ -46,14 +73,4 @@ class Client
 
         output.writeMultipleFourString(typeString);
     }
-
-    // private function writeArgument(argument:Argument, output:BytesOutput):Void
-    // {
-    //     switch argument.type {
-    //         case ArgumentType.Array:
-
-    //     }
-    // }
-
-    // private function writeArray(argument:)
 }

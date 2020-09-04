@@ -24,6 +24,11 @@ udpPort.on("message", function (oscMsg, timeTag, info) {
     process.exit(0);
 });
 
+udpPort.on("bundle", function (oscBundle, timeTag, info) {
+    console.log(JSON.stringify(oscBundle));
+    process.exit(0);
+});
+
 setTimeout(() => {
     // Abort so as not to freeze the script and let it fail
     process.exit(3);

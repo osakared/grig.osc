@@ -14,4 +14,11 @@ class ArrayArgument extends Argument
     {
         return '[' + [for (argument in arguments) argument.toString()].join(', ') + ']';
     }
+
+    override public function write(output:haxe.io.Output):Void
+    {
+        for (argument in arguments) {
+            argument.write(output);
+        }
+    }
 }

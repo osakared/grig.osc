@@ -14,4 +14,9 @@ class Int32Argument extends Argument
     {
         return '$val';
     }
+
+    override public function write(output:haxe.io.Output):Void
+    {
+        output.writeInt32(val);
+    }
 }
