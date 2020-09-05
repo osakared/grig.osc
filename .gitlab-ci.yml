@@ -5,9 +5,12 @@ test:
    - npm install
    - npx lix download
    - export TZ='America/Los_Angeles'
-   - npx haxe tests.hxml -cpp bin/cpp                   && ./bin/cpp/RunTests
+   - npx haxe tests.hxml -cpp bin/tests                 && ./bin/tests/RunTests
    - npx haxe tests.hxml -hl bin/tests.hl               && npx hl ./bin/tests.hl
    - npx haxe tests.hxml -neko bin/tests.n              && npx neko bin/tests.n
+   - npx haxe tests.hxml -python bin/tests.py           && python3 bin/tests.py
+   - npx haxe tests.hxml -lib hxnodejs -js bin/tests.js && npx node bin/tests.js
+   - npx haxe tests.hxml -lua bin/tests.lua             && lua bin/tests.lua
 
 release:
   stage: deploy

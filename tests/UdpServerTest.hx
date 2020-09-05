@@ -52,7 +52,6 @@ class UdpServerTest
     {
     }
 
-    #if (cpp || hl || neko)
     public function testRegister()
     {
         var socket = new grig.osc.NullPacketListener();
@@ -69,6 +68,7 @@ class UdpServerTest
         return asserts.done();
     }
 
+    #if (cpp || hl || neko)
     public function testFilter()
     {
         // Ensure this is skipped for platforms udp doesn't work

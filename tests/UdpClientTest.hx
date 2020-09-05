@@ -21,6 +21,7 @@ class UdpClientTest
     {
     }
 
+    #if (cpp || hl || neko)
     public function testMessage()
     {
         port++;
@@ -94,4 +95,5 @@ class UdpClientTest
         clientTester.close();
         return asserts.done();
     }
+    #end
 }

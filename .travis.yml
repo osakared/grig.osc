@@ -15,3 +15,6 @@ script:
   - export TZ='America/Los_Angeles'
   - npx haxelib run travix cpp
   - npx haxelib run travix hl
+  - npx haxelib run travix node
+  - npx haxelib run travix python
+  - npx haxelib run travix lua
