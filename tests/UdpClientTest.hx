@@ -13,7 +13,7 @@ import tink.unit.AssertionBuffer;
 using StringTools;
 
 @:asserts
-class ClientTest
+class UdpClientTest
 {
     private var port = 9000;
 
@@ -29,7 +29,7 @@ class ClientTest
         var clientTester = new Process('npx', ['node', 'tests/testClient.js', '$port']);
         Sys.sleep(2);
         var message = new Message('/knob/1');
-        message.arguments.push(new grig.osc.Float32Argument(0.5));
+        message.arguments.push(new grig.osc.argument.Float32Argument(0.5));
         client.sendMessage(message);
         if (clientTester.exitCode() != 0) {
             return assert(false);
@@ -49,27 +49,27 @@ class ClientTest
         Sys.sleep(2);
         var bundle = new Bundle('#bundle', Date.fromTime(1599023982500));
         var message = new Message('/s_new');
-        message.arguments.push(new grig.osc.Float32Argument(0.5));
-        message.arguments.push(new grig.osc.Int32Argument(7));
-        message.arguments.push(new grig.osc.DoubleArgument(0.5));
-        message.arguments.push(new grig.osc.Int64Argument(5000));
-        message.arguments.push(new grig.osc.TimeArgument(Date.fromTime(1599023982510)));
+        message.arguments.push(new grig.osc.argument.Float32Argument(0.5));
+        message.arguments.push(new grig.osc.argument.Int32Argument(7));
+        message.arguments.push(new grig.osc.argument.DoubleArgument(0.5));
+        message.arguments.push(new grig.osc.argument.Int64Argument(5000));
+        message.arguments.push(new grig.osc.argument.TimeArgument(Date.fromTime(1599023982510)));
         bundle.messages.push(message);
         message = new Message('/meta');
-        message.arguments.push(new grig.osc.StringArgument('nonavian dinosaur'));
-        message.arguments.push(new grig.osc.SymbolArgument('avians'));
-        message.arguments.push(new grig.osc.BlobArgument(haxe.io.Bytes.ofString('DATA')));
-        message.arguments.push(new grig.osc.ColorArgument(0x0000ffff));
-        message.arguments.push(new grig.osc.InfinitumArgument());
+        message.arguments.push(new grig.osc.argument.StringArgument('nonavian dinosaur'));
+        message.arguments.push(new grig.osc.argument.SymbolArgument('avians'));
+        message.arguments.push(new grig.osc.argument.BlobArgument(haxe.io.Bytes.ofString('DATA')));
+        message.arguments.push(new grig.osc.argument.ColorArgument(0x0000ffff));
+        message.arguments.push(new grig.osc.argument.InfinitumArgument());
         bundle.messages.push(message);
         message = new Message('/buttons');
-        message.arguments.push(new grig.osc.BooleanArgument(true));
-        message.arguments.push(new grig.osc.BooleanArgument(false));
-        message.arguments.push(new grig.osc.NilArgument());
-        message.arguments.push(new grig.osc.CharArgument('B'));
+        message.arguments.push(new grig.osc.argument.BooleanArgument(true));
+        message.arguments.push(new grig.osc.argument.BooleanArgument(false));
+        message.arguments.push(new grig.osc.argument.NilArgument());
+        message.arguments.push(new grig.osc.argument.CharArgument('B'));
         bundle.messages.push(message);
         message = new Message('/midi/1');
-        message.arguments.push(new grig.osc.MidiArgument(0x91240D00));
+        message.arguments.push(new grig.osc.argument.MidiArgument(0x91240D00));
         bundle.messages.push(message);
         client.sendBundle(bundle);
         if (clientTester.exitCode() != 0) {

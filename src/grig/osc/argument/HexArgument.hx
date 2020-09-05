@@ -1,18 +1,20 @@
-package grig.osc;
+package grig.osc.argument;
 
-class Int32Argument extends Argument
+using grig.osc.InputTypes;
+
+class HexArgument extends Argument
 {
     public var val(default, null):Int;
 
-    public function new(val:Int)
+    public function new(val:Int, type:ArgumentType)
     {
-        super(ArgumentType.Int32);
+        super(type);
         this.val = val;
     }
 
     override private function get_value():String
     {
-        return '$val';
+        return '0x${StringTools.hex(val, 8)}';
     }
 
     override public function write(output:haxe.io.Output):Void

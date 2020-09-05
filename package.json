@@ -1,6 +1,7 @@
 {
     "name": "grig.osc-tester",
     "dependencies": {
+        "deasync": "^0.1.20",
         "osc": "2.4.1"
     },
     "devDependencies": {

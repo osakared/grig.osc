@@ -1,6 +1,6 @@
 package;
 
-import grig.osc.ArgumentType;
+import grig.osc.argument.ArgumentType;
 import grig.osc.Bundle;
 import grig.osc.Message;
 import grig.osc.Server;
@@ -10,7 +10,7 @@ import tink.unit.Assert.*;
 import tink.unit.AssertionBuffer;
 
 @:asserts
-class ServerTest
+class UdpServerTest
 {
 
     private static var serverTestValues = [
@@ -52,6 +52,7 @@ class ServerTest
     {
     }
 
+    #if (cpp || hl || neko)
     public function testRegister()
     {
         var listener = new UdpListener();
@@ -109,5 +110,6 @@ class ServerTest
         server.close();
         return asserts.done();
     }
+    #end
 
 }

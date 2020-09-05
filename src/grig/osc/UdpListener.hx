@@ -1,4 +1,4 @@
-package grig.osc;
+package grig.osc; #if (cpp || hl || neko)
 
 import haxe.io.Bytes;
 import sys.net.Address;
@@ -57,3 +57,5 @@ class UdpListener
         socket.close();
     }
 }
+
+#end

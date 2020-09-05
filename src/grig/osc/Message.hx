@@ -1,5 +1,7 @@
 package grig.osc;
 
+import grig.osc.argument.Argument;
+
 class Message extends Packet
 {
     public var arguments(default, null) = new Array<Argument>();

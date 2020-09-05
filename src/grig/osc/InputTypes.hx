@@ -24,24 +24,24 @@ class InputTypes
         return (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
     }
 
-    public static function readColorArgument(input:Input):ColorArgument
+    public static function readColorArgument(input:Input)
     {
-        return new ColorArgument(readUInt32(input));
+        return new grig.osc.argument.ColorArgument(readUInt32(input));
     }
 
-    public static function readMidiArgument(input:Input):MidiArgument
+    public static function readMidiArgument(input:Input)
     {
-        return new MidiArgument(readUInt32(input));
+        return new grig.osc.argument.MidiArgument(readUInt32(input));
     }
 
-    public static function readFloat32Argument(input:Input):Float32Argument
+    public static function readFloat32Argument(input:Input)
     {
-        return new Float32Argument(input.readFloat());
+        return new grig.osc.argument.Float32Argument(input.readFloat());
     }
 
-    public static function readInt32Argument(input:Input):Int32Argument
+    public static function readInt32Argument(input:Input)
     {
-        return new Int32Argument(input.readInt32());
+        return new grig.osc.argument.Int32Argument(input.readInt32());
     }
 
     public static function readMultipleFourString(input:Input):String
@@ -62,9 +62,9 @@ class InputTypes
         return s;
     }
 
-    public static function readStringArgument(input:Input):StringArgument
+    public static function readStringArgument(input:Input)
     {
-        return new StringArgument(readMultipleFourString(input));
+        return new grig.osc.argument.StringArgument(readMultipleFourString(input));
     }
 
     public static function readBlob(input:Input):Bytes
@@ -74,9 +74,9 @@ class InputTypes
         return input.read(len);
     }
 
-    public static function readBlobArgument(input:Input):BlobArgument
+    public static function readBlobArgument(input:Input)
     {
-        return new BlobArgument(readBlob(input));
+        return new grig.osc.argument.BlobArgument(readBlob(input));
     }
 
     /**
@@ -91,9 +91,9 @@ class InputTypes
         return Int64.make(b1, b2);
     }
 
-    public static function readInt64Argument(input:Input):Int64Argument
+    public static function readInt64Argument(input:Input)
     {
-        return new Int64Argument(readInt64(input));
+        return new grig.osc.argument.Int64Argument(readInt64(input));
     }
 
     public static function readTime(input:Input):Date
@@ -105,19 +105,19 @@ class InputTypes
         return Date.fromTime(seconds * 1000.0);
     }
 
-    public static function readTimeArgument(input:Input):TimeArgument
+    public static function readTimeArgument(input:Input)
     {
-        return new TimeArgument(readTime(input));
+        return new grig.osc.argument.TimeArgument(readTime(input));
     }
 
-    public static function readDoubleArgument(input:Input):DoubleArgument
+    public static function readDoubleArgument(input:Input)
     {
-        return new DoubleArgument(input.readDouble());
+        return new grig.osc.argument.DoubleArgument(input.readDouble());
     }
 
-    public static function readSymbolArgument(input:Input):SymbolArgument
+    public static function readSymbolArgument(input:Input)
     {
-        return new SymbolArgument(readMultipleFourString(input));
+        return new grig.osc.argument.SymbolArgument(readMultipleFourString(input));
     }
 
     public static function readChar(input:Input):String
@@ -126,8 +126,8 @@ class InputTypes
         return String.fromCharCode(val);
     }
 
-    public static function readCharArgument(input:Input):CharArgument
+    public static function readCharArgument(input:Input)
     {
-        return new CharArgument(readChar(input));
+        return new grig.osc.argument.CharArgument(readChar(input));
     }
 }

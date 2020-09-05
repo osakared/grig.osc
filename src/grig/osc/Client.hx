@@ -1,5 +1,7 @@
 package grig.osc;
 
+import grig.osc.argument.ArgumentType;
+import grig.osc.argument.ArrayArgument;
 import haxe.io.BytesOutput;
 
 using grig.osc.OutputTypes;

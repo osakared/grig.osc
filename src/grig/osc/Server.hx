@@ -1,6 +1,13 @@
 package grig.osc;
 
 import grig.osc.OSCCallback;
+import grig.osc.argument.Argument;
+import grig.osc.argument.ArgumentType;
+import grig.osc.argument.ArrayArgument;
+import grig.osc.argument.BooleanArgument;
+import grig.osc.argument.Float32Argument;
+import grig.osc.argument.InfinitumArgument;
+import grig.osc.argument.NilArgument;
 import haxe.io.BytesInput;
 
 using grig.osc.InputTypes;

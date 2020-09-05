@@ -1,5 +1,7 @@
 package grig.osc;
 
+import grig.osc.argument.ArgumentType;
+
 /**
  * Represents matching parameters and a callback
  */

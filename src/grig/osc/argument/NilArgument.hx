@@ -1,4 +1,4 @@
-package grig.osc;
+package grig.osc.argument;
 
 class NilArgument extends Argument
 {

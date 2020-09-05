@@ -1,12 +1,12 @@
-package grig.osc;
+package grig.osc.argument;
 
-class Float32Argument extends Argument
+class DoubleArgument extends Argument
 {
     public var val(default, null):Float;
 
     public function new(val:Float)
     {
-        super(ArgumentType.Float32);
+        super(ArgumentType.Double);
         this.val = val;
     }
 
@@ -17,6 +17,6 @@ class Float32Argument extends Argument
 
     override public function write(output:haxe.io.Output):Void
     {
-        output.writeFloat(val);
+        output.writeDouble(val);
     }
 }
