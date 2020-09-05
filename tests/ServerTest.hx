@@ -54,7 +54,6 @@ class ServerTest
 
     public function testRegister()
     {
-        var asserts = new AssertionBuffer();
         var listener = new UdpListener();
         listener.bind(new Host('0.0.0.0'), port++);
         var server = new Server(listener.receiver);
@@ -91,7 +90,6 @@ class ServerTest
     public function testUDP()
     {
         // Ensure this is skipped for platforms udp doesn't work
-        var asserts = new AssertionBuffer();
         var listener = new UdpListener();
         port++;
         listener.bind(new Host('0.0.0.0'), port);

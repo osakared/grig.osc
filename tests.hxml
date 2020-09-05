@@ -4,3 +4,4 @@
 -dce full
 -lib tink_unittest
 -lib thx.core
+--resource tests/bundleCheck.json@bundleCheck.json

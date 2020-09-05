@@ -14,4 +14,10 @@ class CharArgument extends Argument
     {
         return char;
     }
+
+    override public function write(output:haxe.io.Output):Void
+    {
+        var character = if (char.length > 0) char.charCodeAt(0) else ' '.charCodeAt(0);
+        output.writeInt32(character);
+    }
 }

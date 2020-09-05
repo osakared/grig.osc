@@ -12,8 +12,8 @@ Transports/targets supported so far:
 
 | Target   | UDP Client | UDP Server | TCP Client | TCP Server | WebSocket Client | WebSocket Server | Threading |
 | -------- | ---------- | ---------- | ---------- | ---------- | ---------------- | ---------------- | --------- |
-| c++      |            | X          |            |            |                  |                  | X         |
-| hl       |            | X          |            |            |                  |                  | X         |
+| c++      | X          | X          |            |            |                  |                  | X         |
+| hl       | X          | X          |            |            |                  |                  | X         |
 | python   |            |            |            |            |                  |                  |           |
 | nodejs   |            |            |            |            |                  |                  |           |
 | html/js  |            |            |            |            |                  |                  |           |
@@ -21,5 +21,5 @@ Transports/targets supported so far:
 | php      |            |            |            |            |                  |                  |           |
 | java     |            |            |            |            |                  |                  |           |
 | c#       |            |            |            |            |                  |                  |           |
-| neko     |            | X          |            |            |                  |                  | X         |
+| neko     | X          | X          |            |            |                  |                  | X         |
 | swf      |            |            |            |            |                  |                  |           |

@@ -1,0 +1,116 @@
+{
+  "timeTag": {
+    "raw": [
+      3808012782,
+      0
+    ],
+    "native": 1599250465000
+  },
+  "packets": [
+    {
+      "address": "/s_new",
+      "args": [
+        {
+          "type": "f",
+          "value": 0.5
+        },
+        {
+          "type": "i",
+          "value": 7
+        },
+        {
+          "type": "d",
+          "value": 0.5
+        },
+        {
+          "type": "h",
+          "value": {
+            "unsigned": false,
+            "low": 5000,
+            "high": 0
+          }
+        },
+        {
+          "type": "t",
+          "value": {
+            "raw": [
+              3808012782,
+              0
+            ],
+            "native": 1599023982000
+          }
+        }
+      ]
+    },
+    {
+      "address": "/meta",
+      "args": [
+        {
+          "type": "s",
+          "value": "nonavian dinosaur"
+        },
+        {
+          "type": "S",
+          "value": "avians"
+        },
+        {
+          "type": "b",
+          "value": {
+            "0": 68,
+            "1": 65,
+            "2": 84,
+            "3": 65
+          }
+        },
+        {
+          "type": "r",
+          "value": {
+            "a": 1,
+            "b": 255,
+            "g": 0,
+            "r": 0
+          }
+        },
+        {
+          "type": "I",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "address": "/buttons",
+      "args": [
+        {
+          "type": "T",
+          "value": true
+        },
+        {
+          "type": "F",
+          "value": false
+        },
+        {
+          "type": "N",
+          "value": null
+        },
+        {
+          "type": "c",
+          "value": "B"
+        }
+      ]
+    },
+    {
+      "address": "/midi/1",
+      "args": [
+        {
+          "type": "m",
+          "value": {
+            "0": 145,
+            "1": 36,
+            "2": 13,
+            "3": 0
+          }
+        }
+      ]
+    }
+  ]
+}

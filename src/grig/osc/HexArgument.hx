@@ -12,8 +12,13 @@ class HexArgument extends Argument
         this.val = val;
     }
 
-    private override function get_value():String
+    override private function get_value():String
     {
         return '0x${StringTools.hex(val, 8)}';
+    }
+
+    override public function write(output:haxe.io.Output):Void
+    {
+        output.writeInt32(val);
     }
 }
