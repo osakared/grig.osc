@@ -4,7 +4,7 @@ import grig.osc.argument.ArgumentType;
 import grig.osc.Bundle;
 import grig.osc.Message;
 import grig.osc.Server;
-import grig.osc.UdpListener;
+import grig.osc.UdpSocket;
 import sys.net.Host;
 import tink.unit.Assert.*;
 import tink.unit.AssertionBuffer;
@@ -55,9 +55,8 @@ class UdpServerTest
     #if (cpp || hl || neko)
     public function testRegister()
     {
-        var listener = new UdpListener();
-        listener.bind(new Host('0.0.0.0'), port++);
-        var server = new Server(listener.receiver);
+        var socket = new grig.osc.NullPacketListener();
+        var server = new Server(socket);
         asserts.assert(server.numCallbacks == 0);
         server.registerCallback((message) -> {}, '/fader/1');
         asserts.assert(server.numCallbacks == 1);
@@ -67,34 +66,32 @@ class UdpServerTest
         asserts.assert(server.numCallbacks == 1);
         server.deregisterAllCallbacks();
         asserts.assert(server.numCallbacks == 0);
-        server.close();
         return asserts.done();
     }
 
     public function testFilter()
     {
         // Ensure this is skipped for platforms udp doesn't work
-        var listener = new UdpListener();
         port++;
-        listener.bind(new Host('0.0.0.0'), port);
-        var server = new Server(listener.receiver);
+        var socket = new UdpSocket();
+        var server = new Server(socket);
         var messageCount = 0;
         server.registerCallback((message) -> {
             messageCount++;
         }, '^/carrier/.*$', true, [ArgumentType.Float32]);
-        server.start();
+        socket.bind('0.0.0.0', port);
         Sys.command('node tests/testServer.js $port');
-        server.close();
+        socket.close();
         return assert(messageCount == 2);
     }
 
     public function testUDP()
     {
         // Ensure this is skipped for platforms udp doesn't work
-        var listener = new UdpListener();
         port++;
-        listener.bind(new Host('0.0.0.0'), port);
-        var server = new Server(listener.receiver);
+        var socket = new UdpSocket();
+        socket.bind('0.0.0.0', port);
+        var server = new Server(socket);
         var i = 0;
         server.registerCallback((message) -> {
             var testValues = serverTestValues[i++];
@@ -105,9 +102,8 @@ class UdpServerTest
                 asserts.assert(testValues.arguments[j] == message.arguments[j].toString());
             }
         });
-        server.start();
         Sys.command('node tests/testServer.js $port');
-        server.close();
+        socket.close();
         return asserts.done();
     }
     #end

@@ -1,45 +1,38 @@
 package grig.osc;
 
+#if nodejs
+typedef UdpSocket = grig.osc.js.node.UdpSocket;
+#else
+
 import haxe.io.Bytes;
+import sys.net.Address;
 import sys.net.Host;
 import tink.core.Error;
 import tink.core.Future;
 import tink.core.Outcome;
 import tink.core.Promise;
 
-#if nodejs
-import js.node.dgram.Socket;
-import js.node.Dgram;
-#end
-
 /**
     Represents a connection to a udp socket and abstracts to platform-specific versions as needed
 **/
-class UdpSocket
+class UdpSocket implements PacketListener
 {
-    #if nodejs
-    private var socket = Dgram.createSocket(Udp4);
-    #else
     private var socket = new sys.net.UdpSocket();
-    #end
+    private var loopRunners = new Array<LoopRunner>();
+    private var deque = new Deque<Bytes>();
+    private var listeners = new Array<(packet:haxe.io.Bytes)->Void>();
+    private inline static var BYTES_LENGTH = 2048;
+    private var bytes:Bytes;
 
     public function new()
     {
     }
 
-    public function send(buffer:Bytes, offset:Int, length:Int, host:String, port:Int):Promise<Int>
+    public function send(buffer:haxe.io.Bytes, offset:Int, length:Int, host:String, port:Int):Promise<Int>
     {
-        #if nodejs
-        return Future.async((callback) -> {
-            socket.send(js.node.buffer.Buffer.hxFromBytes(buffer), offset, length, port, host, (err, len) -> {
-                if (err != null) callback(Failure(new Error(err.message)));
-                else callback(Success(len));
-            });
-        });
-        #else
         try {
-            var address = new sys.net.Address();
-            var host = new sys.net.Host(host);
+            var address = new Address();
+            var host = new Host(host);
             address.host = host.ip;
             address.port = port;
             var len = socket.sendTo(buffer, 0, buffer.length, address);
@@ -47,6 +40,51 @@ class UdpSocket
         } catch (e:haxe.Exception) {
             return Future.sync(Failure(new Error(InternalError, e.message)));
         }
-        #end
+    }
+
+    public function registerCallback(listener:(packet:haxe.io.Bytes)->Void):Void
+    {
+        listeners.push(listener);
+    }
+
+    public function bind(host:String, port:Int):Void
+    {
+        var host = new Host(host);
+        bytes = Bytes.alloc(BYTES_LENGTH);
+        socket.bind(host, port);
+        var socketRunner = new LoopRunner(socketLoop, null, () -> {
+            socket.close();
+        });
+        var callbackRunner = new LoopRunner(callbackLoop);
+        LoopRunner.startMultiple([socketRunner, callbackRunner]);
+        loopRunners.push(socketRunner);
+        loopRunners.push(callbackRunner);
+    }
+
+    private function socketLoop():Void
+    {
+        var senderAddress = new Address();
+        socket.waitForRead();
+        var length = socket.readFrom(bytes, 0, BYTES_LENGTH, senderAddress);
+        deque.push(bytes.sub(0, length));
+    }
+
+    private function callbackLoop():Void
+    {
+        var packet = this.deque.pop(false);
+        if (packet != null) {
+            for (listener in listeners) {
+                listener(packet);
+            }
+        }
+    }
+
+    public function close():Void
+    {
+        for (loopRunner in loopRunners) {
+            loopRunner.stop();
+        }
     }
 }
+
+#end

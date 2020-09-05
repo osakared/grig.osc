@@ -16,9 +16,7 @@ using thx.Int64s;
 
 class Server
 {
-    private var transport:PacketReceiver;
     private var callbacks = new Array<Callback>();
-    private var running:Bool = false;
 
     public var numCallbacks(get, null):Int;
 
@@ -27,9 +25,9 @@ class Server
         return callbacks.length;
     }
 
-    public function new(transport:PacketReceiver)
+    public function new(transport:PacketListener)
     {
-        this.transport = transport;
+        transport.registerCallback(onPacket);
     }
 
     /**
@@ -53,7 +51,7 @@ class Server
             callback(argument.val);
         }, pattern, false, [ArgumentType.Float32]));
     }
-    
+
     public function deregisterCallbacks(pattern:String):Void
     {
         callbacks = [for (callback in callbacks) {
@@ -73,30 +71,19 @@ class Server
         }
     }
 
-    public function start():Void
+    public function onPacket(bytes:haxe.io.Bytes):Void
     {
-        running = true;
-        Thread.create(() -> {
-            while (running) {
-                var bytes = transport.getPacket();
-                var input = new BytesInput(bytes);
-                input.bigEndian = true;
-                var s = input.readMultipleFourString();
-                if (s.startsWith('/')) {
-                    dispatchMessage(readMessage(s, input));
-                }
-                else if (s.startsWith('#')) {
-                    for (message in readBundle(s, input).messages) {
-                        dispatchMessage(message);
-                    }
-                }
+        var input = new BytesInput(bytes);
+        input.bigEndian = true;
+        var s = input.readMultipleFourString();
+        if (s.startsWith('/')) {
+            dispatchMessage(readMessage(s, input));
+        }
+        else if (s.startsWith('#')) {
+            for (message in readBundle(s, input).messages) {
+                dispatchMessage(message);
             }
-        });
-    }
-
-    public function close():Void
-    {
-        running = false;
+        }
     }
 
     private static function toArgument(typeString:String, input:BytesInput):Argument
