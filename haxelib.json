@@ -16,6 +16,7 @@
   "releasenote": "Initial release",
   "version": "0.0.1",
   "dependencies": {
-    "thx.core": "0.44.0"
+    "thx.core": "0.44.0",
+    "tink_core": "1.20.0"
   }
 }

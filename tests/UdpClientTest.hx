@@ -24,7 +24,7 @@ class UdpClientTest
     public function testMessage()
     {
         port++;
-        var packetSender = new UdpPacketSender(new Host('localhost'), port);
+        var packetSender = new UdpPacketSender('localhost', port);
         var client = new Client(packetSender);
         var clientTester = new Process('npx', ['node', 'tests/testClient.js', '$port']);
         Sys.sleep(2);
@@ -43,7 +43,7 @@ class UdpClientTest
     public function testBundle()
     {
         port++;
-        var packetSender = new UdpPacketSender(new Host('localhost'), port);
+        var packetSender = new UdpPacketSender('localhost', port);
         var client = new Client(packetSender);
         var clientTester = new Process('npx', ['node', 'tests/testClient.js', '$port']);
         Sys.sleep(2);
@@ -92,6 +92,6 @@ class UdpClientTest
         asserts.assert(args[0].value == argsCheck[0].value);
         
         clientTester.close();
-        return asserts.done();//Json.stringify(output.packets) == Json.stringify(outputCheck));
+        return asserts.done();
     }
 }

@@ -2,22 +2,22 @@ package grig.osc;
 
 import haxe.io.Bytes;
 import sys.net.Address;
-import sys.net.Host;
-import sys.net.UdpSocket;
 
 class UdpPacketSender implements PacketSender
 {
     private var socket = new UdpSocket();
     private var address = new Address();
+    private var host:String;
+    private var port:Int;
 
-    public function new(host:Host, port:Int)
+    public function new(host:String, port:Int)
     {
-        address.host = host.ip;
-        address.port = port;
+        this.host = host;
+        this.port = port;
     }
 
     public function sendPacket(packet:Bytes):Void
     {
-        socket.sendTo(packet, 0, packet.length, address);
+        socket.send(packet, 0, packet.length, host, port);
     }
 }
