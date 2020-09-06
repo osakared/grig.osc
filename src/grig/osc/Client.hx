@@ -15,7 +15,7 @@ class Client
         this.sender = sender;
     }
 
-    public function sendMessage(message:Message):Void
+    public function sendMessage(message:Message)
     {
         var output = new BytesOutput();
         output.bigEndian = true;
@@ -23,10 +23,10 @@ class Client
         writeMessage(message, output);
 
         output.close();
-        sender.sendPacket(output.getBytes());
+        return sender.sendPacket(output.getBytes());
     }
 
-    public function sendBundle(bundle:Bundle):Void
+    public function sendBundle(bundle:Bundle)
     {
         var output = new BytesOutput();
         output.bigEndian = true;
@@ -45,7 +45,7 @@ class Client
         }
 
         output.close();
-        sender.sendPacket(output.getBytes());
+        return sender.sendPacket(output.getBytes());
     }
 
     private function writeMessage(message:Message, output:BytesOutput):Void

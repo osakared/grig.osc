@@ -1,8 +1,8 @@
 package grig.osc;
 
-#if (target.threaded)
-typedef WorkerRunner = ThreadedWorkerRunner;
-#else
+// #if (target.threaded)
+// typedef WorkerRunner = ThreadedWorkerRunner;
+// #else
 
 /**
     Abstracts over a thread or a simple loop, depending on if the environment has threading implemented or not
@@ -27,4 +27,4 @@ class WorkerRunner
     }
 }
 
-#end
+// #end

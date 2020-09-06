@@ -45,11 +45,12 @@ class Server
      */
     public function registerFloat32Callback(callback:(value:Float)->Void, pattern:String):Void
     {
-        callbacks.push(new Callback((message) -> {
-            if (!Std.isOfType(message, Float32Argument)) return;
-            var argument:Float32Argument = cast message;
+        registerCallback((message) -> {
+            if (message.arguments.length < 1) return;
+            if (!Std.isOfType(message.arguments[0], Float32Argument)) return;
+            var argument:Float32Argument = cast message.arguments[0];
             callback(argument.val);
-        }, pattern, false, [ArgumentType.Float32]));
+        }, pattern, false, [ArgumentType.Float32]);
     }
 
     public function deregisterCallbacks(pattern:String):Void

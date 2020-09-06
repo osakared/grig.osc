@@ -6,6 +6,7 @@ import grig.osc.Message;
 import grig.osc.Server;
 import grig.osc.UdpPacketListener;
 import sys.net.Host;
+import tink.core.Future;
 import tink.unit.Assert.*;
 import tink.unit.AssertionBuffer;
 
@@ -67,6 +68,31 @@ class UdpServerTest
         asserts.assert(server.numCallbacks == 0);
         return asserts.done();
     }
+
+    #if (cpp || hl || neko || nodejs)
+
+    @:timeout(10000)
+    @:describe("Tests using grig\'s udp client and udp server")
+    public function testClientAndServer()
+    {
+        return Future.async((callback) -> {
+            // Ensure this is skipped for platforms udp doesn't work
+            port++;
+            var socket = new UdpPacketListener();
+            var server = new Server(socket);
+            server.registerFloat32Callback((val) -> {
+                socket.close();
+                callback(assert(val == 0.5));
+            }, '/knob/1');
+            socket.bind('0.0.0.0', port);
+            var packetSender = new grig.osc.UdpPacketSender('localhost', port);
+            var client = new grig.osc.Client(packetSender);
+            var message = new Message('/knob/1');
+            message.arguments.push(new grig.osc.argument.Float32Argument(0.5));
+            client.sendMessage(message);
+        });
+    }
+    #end
 
     #if (cpp || hl || neko)
     public function testFilter()
