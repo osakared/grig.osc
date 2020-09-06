@@ -1,5 +1,9 @@
 package grig.osc;
 
+#if nodejs
+typedef TcpClient = grig.osc.js.node.TcpClient;
+#else
+
 import haxe.io.Bytes;
 import sys.net.Address;
 import sys.net.Host;
@@ -33,7 +37,7 @@ class TcpClient implements PacketSender
                 try {
                     socket.output.writeInt32(packet.length);
                     socket.output.write(packet);
-                    callback(Success(packet.length + 2));
+                    callback(Success(packet.length + 4));
                 } catch (e:haxe.Exception) {
                     callback(Failure(new Error(InternalError, e.message)));
                 }
@@ -47,3 +51,5 @@ class TcpClient implements PacketSender
         workerRunner.stop();
     }
 }
+
+#end

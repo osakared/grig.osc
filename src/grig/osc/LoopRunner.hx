@@ -1,6 +1,6 @@
 package grig.osc;
 
-#if (target.threaded)
+#if (target.threaded || python)
 typedef LoopRunner = ThreadedLoopRunner;
 #else
 

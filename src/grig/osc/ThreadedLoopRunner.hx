@@ -1,10 +1,13 @@
-package grig.osc; #if (target.threaded)
+package grig.osc; #if (target.threaded || python)
 
+#if python
+import python.lib.ThreadLowLevel;
+#else
 import sys.thread.Thread;
+#end
 
 class ThreadedLoopRunner
 {
-    private var thread:Thread = null;
     private var running:Bool = false;
     private var loop:SimpleCallback;
     private var startup:SimpleCallback;
@@ -19,14 +22,21 @@ class ThreadedLoopRunner
 
     public function start()
     {
-        thread = Thread.create(() -> {
-            running = true;
-            if (startup != null) startup();
-            while (running) {
-                loop();
-            }
-            if (shutdown != null) shutdown();
-        });
+        #if python
+        ThreadLowLevel.start_new_thread(thread, new python.Tuple<Dynamic>([]));
+        #else
+        Thread.create(thread);
+        #end
+    }
+
+    private function thread()
+    {
+        running = true;
+        if (startup != null) startup();
+        while (running) {
+            loop();
+        }
+        if (shutdown != null) shutdown();
     }
 
     public static function startMultiple(runners:Array<LoopRunner>):Void

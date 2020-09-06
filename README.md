@@ -14,12 +14,14 @@ Transports/targets supported so far:
 | -------- | ---------- | ---------- | ---------- | ---------- | ---------------- | ---------------- | --------- |
 | c++      | X          | X          | X          | X          |                  |                  | X         |
 | hl       | X          | X          | X          | X          |                  |                  | X         |
-| python   |            |            |            |            |                  |                  |           |
-| nodejs   | X          | X          |            |            |                  |                  |           |
+| python   |            |            | X          | X          |                  |                  | X         |
+| nodejs   | X          | X          | X          | X          |                  |                  |           |
 | html/js  |            |            |            |            |                  |                  |           |
 | lua      |            |            |            |            |                  |                  |           |
 | php      |            |            |            |            |                  |                  |           |
-| java     |            |            |            |            |                  |                  |           |
+| java     |            |            | X          | X          |                  |                  | X         |
 | c#       |            |            | X          | X          |                  |                  | X         |
 | neko     | X          | X          | X          | X          |                  |                  | X         |
 | swf      |            |            |            |            |                  |                  |           |
+
+All targets of course get the logic to parse osc so you can always supply your own transport by implementing `PacketListener` for servers and `PacketSender` for clients.

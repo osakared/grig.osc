@@ -19,7 +19,7 @@ class TcpTest
     {
     }
 
-    #if (cpp || hl || neko || cs || java)
+    #if (cpp || hl || neko || cs || java || python || nodejs)
     public function testClientAndServer()
     {
         return Future.async((callback) -> {

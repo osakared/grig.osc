@@ -1,5 +1,9 @@
 package grig.osc;
 
+#if nodejs
+typedef TcpServer = grig.osc.js.node.TcpServer;
+#else
+
 import haxe.io.Bytes;
 import sys.net.Address;
 import sys.net.Host;
@@ -90,7 +94,9 @@ class TcpServer implements PacketListener implements PacketSender
                 error += '${e.toString()}\n';
             }
         }
-        if (error == '') return Future.sync(Success(packet.length + 2));
+        if (error == '') return Future.sync(Success(packet.length + 4));
         return Future.sync(Failure(new Error(InternalError, error)));
     }
 }
+
+#end
