@@ -9,7 +9,7 @@ class Main
     public static function main()
     {
         var socket = new UdpPacketListener();
-        socket.bind('0.0.0.0', 8000);
+        socket.bind('127.0.0.1', 8000);
         var server = new Server(socket);
         server.registerCallback((message) -> {
             trace(message.toString());

@@ -11,6 +11,8 @@ test:
    - npx haxe tests.hxml -python bin/tests.py           && python3 bin/tests.py
    - npx haxe tests.hxml -lib hxnodejs -js bin/tests.js && npx node bin/tests.js
    - npx haxe tests.hxml -lua bin/tests.lua             && lua bin/tests.lua
+   - haxe tests.hxml -java bin/java                     && java -jar bin/java/RunTests.jar
+   - haxe tests.hxml -cs bin                            && mono bin/bin/RunTests.exe
 
 release:
   stage: deploy

@@ -53,6 +53,7 @@ class UdpServerTest
     {
     }
 
+    @:describe("Test registering and deregistering callbacks with the server")
     public function testRegister()
     {
         var socket = new grig.osc.NullPacketListener();
@@ -70,9 +71,8 @@ class UdpServerTest
     }
 
     #if (cpp || hl || neko || nodejs)
-
     @:timeout(10000)
-    @:describe("Tests using grig\'s udp client and udp server")
+    @:describe("Tests using grig's udp client and udp server")
     public function testClientAndServer()
     {
         return Future.async((callback) -> {
@@ -111,6 +111,7 @@ class UdpServerTest
         return assert(messageCount == 2);
     }
 
+    @:describe("Test udp server with external udp client")
     public function testUDP()
     {
         // Ensure this is skipped for platforms udp doesn't work
