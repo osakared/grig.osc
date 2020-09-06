@@ -1,21 +1,17 @@
 package grig.osc;
 
 #if nodejs
-typedef UdpSocket = grig.osc.js.node.UdpSocket;
+typedef UdpPacketListener = grig.osc.js.node.UdpPacketListener;
 #else
 
 import haxe.io.Bytes;
 import sys.net.Address;
 import sys.net.Host;
-import tink.core.Error;
-import tink.core.Future;
-import tink.core.Outcome;
-import tink.core.Promise;
 
 /**
     Represents a connection to a udp socket and abstracts to platform-specific versions as needed
 **/
-class UdpSocket implements PacketListener
+class UdpPacketListener implements PacketListener
 {
     private var socket = new sys.net.UdpSocket();
     private var loopRunners = new Array<LoopRunner>();
@@ -26,20 +22,6 @@ class UdpSocket implements PacketListener
 
     public function new()
     {
-    }
-
-    public function send(buffer:haxe.io.Bytes, offset:Int, length:Int, host:String, port:Int):Promise<Int>
-    {
-        try {
-            var address = new Address();
-            var host = new Host(host);
-            address.host = host.ip;
-            address.port = port;
-            var len = socket.sendTo(buffer, 0, buffer.length, address);
-            return Future.sync(Success(len));
-        } catch (e:haxe.Exception) {
-            return Future.sync(Failure(new Error(InternalError, e.message)));
-        }
     }
 
     public function registerCallback(listener:(packet:haxe.io.Bytes)->Void):Void

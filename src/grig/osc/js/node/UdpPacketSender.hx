@@ -7,22 +7,30 @@ import tink.core.Future;
 import tink.core.Outcome;
 import tink.core.Promise;
 
-class UdpSocket
+class UdpPacketSender implements grig.osc.PacketSender
 {
     private var socket = Dgram.createSocket(Udp4);
+    private var host:String;
+    private var port:Int;
 
-    public function new()
+    public function new(host:String, port:Int)
     {
+        this.host = host;
+        this.port = port;
     }
 
-    public function send(buffer:haxe.io.Bytes, offset:Int, length:Int, host:String, port:Int):Promise<Int>
+    public function sendPacket(packet:haxe.io.Bytes):Promise<Int>
     {
         return Future.async((callback) -> {
-            socket.send(js.node.buffer.Buffer.hxFromBytes(buffer), offset, length, port, host, (err, len) -> {
+            socket.send(js.node.buffer.Buffer.hxFromBytes(packet), 0, packet.length, port, host, (err, len) -> {
                 if (err != null) callback(Failure(new Error(err.message)));
                 else callback(Success(len));
             });
         });
+    }
+
+    public function close():Void
+    {
     }
 }
 

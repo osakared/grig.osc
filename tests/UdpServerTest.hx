@@ -4,7 +4,7 @@ import grig.osc.argument.ArgumentType;
 import grig.osc.Bundle;
 import grig.osc.Message;
 import grig.osc.Server;
-import grig.osc.UdpSocket;
+import grig.osc.UdpPacketListener;
 import sys.net.Host;
 import tink.unit.Assert.*;
 import tink.unit.AssertionBuffer;
@@ -73,7 +73,7 @@ class UdpServerTest
     {
         // Ensure this is skipped for platforms udp doesn't work
         port++;
-        var socket = new UdpSocket();
+        var socket = new UdpPacketListener();
         var server = new Server(socket);
         var messageCount = 0;
         server.registerCallback((message) -> {
@@ -89,7 +89,7 @@ class UdpServerTest
     {
         // Ensure this is skipped for platforms udp doesn't work
         port++;
-        var socket = new UdpSocket();
+        var socket = new UdpPacketListener();
         socket.bind('0.0.0.0', port);
         var server = new Server(socket);
         var i = 0;
