@@ -56,7 +56,6 @@ class TcpServer implements PacketListener implements PacketSender
                 clients.push(socket);
             }
             for (client in clients) {
-                // client.waitForRead();
                 var len = client.input.readInt32();
                 var bytes = client.input.read(len);
                 deque.push(bytes);
