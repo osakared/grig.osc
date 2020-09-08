@@ -24,8 +24,8 @@ Transports/targets supported so far:
 | neko     | X          | X          |           | X         |
 | swf      |            | *          |           |           |
 
-X - non-blocking
-O - blocking only
-* - when linking with openfl
+- X non-blocking
+- O blocking only
+- * when linking with openfl
 
 All targets of course get the logic to parse osc so you can always supply your own transport by implementing `PacketListener` for servers and `PacketSender` for clients.
