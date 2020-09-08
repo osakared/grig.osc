@@ -5,9 +5,6 @@ typedef TcpClient = grig.osc.js.node.TcpClient;
 #else
 
 import haxe.io.Bytes;
-import sys.net.Address;
-import sys.net.Host;
-import sys.net.Socket;
 import tink.core.Error;
 import tink.core.Future;
 import tink.core.Outcome;
@@ -15,8 +12,7 @@ import tink.core.Promise;
 
 class TcpClient implements PacketSender implements PacketListener
 {
-    private var socket = new sys.net.Socket();
-    private var address = new Address();
+    private var socket = new TcpSocket();
     private var workerRunner = new WorkerRunner();
     private var loopRunner:LoopRunner;
     private var listeners = new Array<(packet:haxe.io.Bytes)->Void>();
@@ -29,8 +25,8 @@ class TcpClient implements PacketSender implements PacketListener
     private function listenerLoop():Void
     {
         try {
-            var len = socket.input.readInt32();
-            var bytes = socket.input.read(len);
+            var len = socket.readInt32();
+            var bytes = socket.read(len);
             for (listener in listeners) {
                 listener(bytes);
             }
@@ -40,9 +36,8 @@ class TcpClient implements PacketSender implements PacketListener
 
     public function connect(host:String, port:Int):Void
     {
-        socket.connect(new Host(host), port);
-        socket.output.bigEndian = true;
-        socket.input.bigEndian = true;
+        socket.connect(host, port);
+        socket.bigEndian = true;
         loopRunner = new LoopRunner(listenerLoop);
     }
 
@@ -51,8 +46,8 @@ class TcpClient implements PacketSender implements PacketListener
         return Future.async((callback) -> {
             workerRunner.queue(() -> {
                 try {
-                    socket.output.writeInt32(packet.length);
-                    socket.output.write(packet);
+                    socket.writeInt32(packet.length);
+                    socket.write(packet);
                     callback(Success(packet.length + 4));
                 } catch (e:haxe.Exception) {
                     callback(Failure(new Error(InternalError, e.message)));

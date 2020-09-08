@@ -16,15 +16,16 @@ Transports/targets supported so far:
 | hl       | X          | X          |           | X         |
 | python   |            | X          |           | X         |
 | nodejs   | X          | X          |           |           |
-| html/js  |            |            |           |           |
+| html/js  |            |            | *         |           |
 | lua      |            | O          |           |           |
 | php      |            | O          |           |           |
 | java     |            | X          |           | X         |
 | c#       |            | X          |           | X         |
 | neko     | X          | X          |           | X         |
-| swf      |            |            |           |           |
+| swf      |            | *          |           |           |
 
 X - non-blocking
 O - blocking only
+* - when linking with openfl
 
 All targets of course get the logic to parse osc so you can always supply your own transport by implementing `PacketListener` for servers and `PacketSender` for clients.

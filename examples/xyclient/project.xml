@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="XYClient" package="tech.grig.xyclient" version="1.0.0" company="Grig" />
+	<app main="Main" path="Export" file="XYClient" />
+	
+	<source path="Source" />
+	<source path="../../src" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="tink_core" />
+	<haxelib name="thx.core" />
+
+	<window fullscreen="false" resizable="true" width="300" height="300" background="#ffffff" />
+
+</project>
