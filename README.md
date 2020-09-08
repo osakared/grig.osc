@@ -10,22 +10,23 @@ haxe implementation of OSC (open sound control)
 
 Transports/targets supported so far:
 
-| Target   | UDP        | TCP        | WebSocket | Threading |
-| -------- | ---------- | ---------- | --------- | --------- |
-| c++      | X          | X          |           | X         |
-| hl       | X          | X          |           | X         |
-| python   |            | X          |           | X         |
-| nodejs   | X          | X          |           |           |
-| html/js  |            |            | *         |           |
-| lua      |            | O          |           |           |
-| php      |            | O          |           |           |
-| java     |            | X          |           | X         |
-| c#       |            | X          |           | X         |
-| neko     | X          | X          |           | X         |
-| swf      |            | *          |           |           |
+| Target   | UDP        | TCP        | WebSockets | Threading |
+| -------- | ---------- | ---------- | ---------- | --------- |
+| c++      | X          | X          |            | X         |
+| hl       | X          | X          |            | X         |
+| python   |            | X          |            | X         |
+| nodejs   | X          | X          |            |           |
+| html/js  |            |            | O (openfl) |           |
+| lua      |            | O          |            |           |
+| php      |            | O          |            |           |
+| java     |            | X          |            | X         |
+| c#       |            | X          |            | X         |
+| neko     | X          | X          |            | X         |
+| swf      |            | O (openfl) |            |           |
 
 - X non-blocking
 - O blocking only
-- * when linking with openfl
+
+OpenFL implementation only supports client, no server
 
 All targets of course get the logic to parse osc so you can always supply your own transport by implementing `PacketListener` for servers and `PacketSender` for clients.
