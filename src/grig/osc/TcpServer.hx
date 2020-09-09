@@ -82,7 +82,7 @@ class TcpServer implements PacketListener implements PacketSender
         socket.close();
     }
 
-    public function sendPacket(packet:haxe.io.Bytes):tink.core.Promise<Int>
+    public function sendPacket(packet:haxe.io.Bytes):Promise<Int>
     {
         var error = '';
         for (client in clients) {

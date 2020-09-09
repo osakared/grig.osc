@@ -3,6 +3,9 @@ package grig.osc;
 import haxe.io.Bytes;
 import sys.io.File;
 import sys.io.FileOutput;
+import tink.core.Future;
+import tink.core.Outcome;
+import tink.core.Promise;
 
 /**
     Useful for debugging, writes packets to a file
@@ -16,8 +19,9 @@ class FileSender implements PacketSender
         output = File.write(path);
     }
 
-    public function sendPacket(packet:Bytes):Void
+    public function sendPacket(packet:Bytes):Promise<Int>
     {
         output.write(packet);
+        return Future.sync(Success(packet.length));
     }
 }
