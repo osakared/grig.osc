@@ -2,7 +2,7 @@ package grig.osc;
 
 #if nodejs
 typedef UdpPacketListener = grig.osc.js.node.UdpPacketListener;
-#else
+#elseif !js
 
 import haxe.io.Bytes;
 import sys.net.Address;
