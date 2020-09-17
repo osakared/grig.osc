@@ -2,7 +2,7 @@ package grig.osc;
 
 #if (openfl && !disable_openfl_socket)
 typedef TcpSocket = grig.osc.openfl.TcpSocket;
-#else
+#elseif (target.sys)
 
 import haxe.io.Bytes;
 import sys.net.Socket;
