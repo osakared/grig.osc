@@ -2,7 +2,7 @@ package grig.osc;
 
 #if nodejs
 typedef TcpClient = grig.osc.js.node.TcpClient;
-#else
+#elseif (target.sys) // because we won't have TcpSocket otherwise
 
 import haxe.io.Bytes;
 import tink.core.Error;
