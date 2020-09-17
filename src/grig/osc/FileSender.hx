@@ -1,4 +1,4 @@
-package grig.osc;
+package grig.osc; #if (target.sys)
 
 import haxe.io.Bytes;
 import sys.io.File;
@@ -25,3 +25,5 @@ class FileSender implements PacketSender
         return Future.sync(Success(packet.length));
     }
 }
+
+#end

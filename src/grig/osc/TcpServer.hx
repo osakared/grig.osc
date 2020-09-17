@@ -2,7 +2,7 @@ package grig.osc;
 
 #if nodejs
 typedef TcpServer = grig.osc.js.node.TcpServer;
-#elseif !js
+#elseif (target.sys)
 
 import haxe.io.Bytes;
 import sys.net.Host;
