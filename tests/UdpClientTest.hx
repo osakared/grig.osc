@@ -70,7 +70,7 @@ class UdpClientTest
         message.arguments.push(new grig.osc.argument.CharArgument('B'));
         bundle.messages.push(message);
         message = new Message('/midi/1');
-        message.arguments.push(new grig.osc.argument.MidiArgument(0x91240D00));
+        message.arguments.push(new grig.osc.argument.MidiArgument(haxe.io.Bytes.ofHex('91240D00')));
         bundle.messages.push(message);
         client.sendBundle(bundle);
         if (clientTester.exitCode() != 0) {

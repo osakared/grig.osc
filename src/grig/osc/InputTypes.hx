@@ -31,7 +31,7 @@ class InputTypes
 
     public static function readMidiArgument(input:Input)
     {
-        return new grig.osc.argument.MidiArgument(readUInt32(input));
+        return new grig.osc.argument.MidiArgument(input.read(4));
     }
 
     public static function readFloat32Argument(input:Input)

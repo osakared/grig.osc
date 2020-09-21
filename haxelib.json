@@ -13,8 +13,8 @@
   "contributors": [
     "thomasjwebb"
   ],
-  "releasenote": "Initial release",
-  "version": "0.0.1",
+  "releasenote": "Added fixes for js",
+  "version": "0.0.2",
   "dependencies": {
     "thx.core": "0.44.0",
     "tink_core": "1.20.0"
