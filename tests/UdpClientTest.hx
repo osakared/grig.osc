@@ -21,7 +21,7 @@ class UdpClientTest
     {
     }
 
-    #if (cpp || hl || neko || java || cs)
+    #if (cpp || hl || neko || java)
     public function testMessage()
     {
         port++;
