@@ -1,30 +1,19 @@
-package grig.osc;
+package grig.osc.cs; #if cs
 
-#if nodejs
-typedef UdpPacketListener = grig.osc.js.node.UdpPacketListener;
-#elseif python
-typedef UdpPacketListener = grig.osc.python.UdpPacketListener;
-#elseif java
-typedef UdpPacketListener = grig.osc.java.UdpPacketListener;
-#elseif cs
-typedef UdpPacketListener = grig.osc.cs.UdpPacketListener;
-#elseif (target.sys)
-
+import cs.system.net.IPEndPoint;
+import cs.system.net.sockets.UdpClient;
+import grig.osc.Deque;
+import grig.osc.LoopRunner;
 import haxe.io.Bytes;
-import sys.net.Address;
-import sys.net.Host;
 
-/**
-    Represents a connection to a udp socket and abstracts to platform-specific versions as needed
-**/
-class UdpPacketListener implements PacketListener
+class UdpPacketListener implements grig.osc.PacketListener
 {
-    private var socket = new sys.net.UdpSocket();
     private var loopRunners = new Array<LoopRunner>();
     private var deque = new Deque<Bytes>();
     private var listeners = new Array<(packet:haxe.io.Bytes)->Void>();
     private inline static var BYTES_LENGTH = 2048;
-    private var bytes:Bytes;
+    private var socket:UdpClient;
+    private var endpoint:IPEndPoint;
 
     public function new()
     {
@@ -37,11 +26,10 @@ class UdpPacketListener implements PacketListener
 
     public function bind(host:String, port:Int):Void
     {
-        var host = new Host(host);
-        socket.bind(host, port);
-        bytes = Bytes.alloc(BYTES_LENGTH);
+        socket = new UdpClient(port);
+        endpoint = new IPEndPoint(cs.system.net.IPAddress.Any, port);
         var socketRunner = new LoopRunner(socketLoop, null, () -> {
-            socket.close();
+            socket.Close();
         });
         var callbackRunner = new LoopRunner(callbackLoop);
         LoopRunner.startMultiple([socketRunner, callbackRunner]);
@@ -51,10 +39,8 @@ class UdpPacketListener implements PacketListener
 
     private function socketLoop():Void
     {
-        var senderAddress = new Address();
-        socket.waitForRead();
-        var length = socket.readFrom(bytes, 0, BYTES_LENGTH, senderAddress);
-        deque.push(bytes.sub(0, length));
+        var packet = socket.Receive(endpoint);
+        deque.push(Bytes.ofData(packet));
     }
 
     private function callbackLoop():Void

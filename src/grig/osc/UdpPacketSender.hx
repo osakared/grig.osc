@@ -6,6 +6,8 @@ typedef UdpPacketSender = grig.osc.js.node.UdpPacketSender;
 typedef UdpPacketSender = grig.osc.python.UdpPacketSender;
 #elseif java
 typedef UdpPacketSender = grig.osc.java.UdpPacketSender;
+#elseif cs
+typedef UdpPacketSender = grig.osc.cs.UdpPacketSender;
 #elseif (target.sys)
 
 import haxe.io.Bytes;
