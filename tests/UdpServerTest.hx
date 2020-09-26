@@ -70,7 +70,7 @@ class UdpServerTest
         return asserts.done();
     }
 
-    #if (cpp || hl || neko || nodejs)
+    #if (cpp || hl || neko || nodejs || java || cs)
     @:timeout(10000)
     @:describe("Tests using grig's udp client and udp server")
     public function testClientAndServer()
@@ -94,7 +94,7 @@ class UdpServerTest
     }
     #end
 
-    #if (cpp || hl || neko)
+    #if (cpp || hl || neko || java || cs)
     public function testFilter()
     {
         // Ensure this is skipped for platforms udp doesn't work
