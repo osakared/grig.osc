@@ -2,6 +2,8 @@ package grig.osc;
 
 #if nodejs
 typedef UdpPacketListener = grig.osc.js.node.UdpPacketListener;
+#elseif python
+typedef UdpPacketListener = grig.osc.python.UdpPacketListener;
 #elseif (target.sys)
 
 import haxe.io.Bytes;
@@ -32,8 +34,8 @@ class UdpPacketListener implements PacketListener
     public function bind(host:String, port:Int):Void
     {
         var host = new Host(host);
-        bytes = Bytes.alloc(BYTES_LENGTH);
         socket.bind(host, port);
+        bytes = Bytes.alloc(BYTES_LENGTH);
         var socketRunner = new LoopRunner(socketLoop, null, () -> {
             socket.close();
         });

@@ -2,6 +2,8 @@ package grig.osc;
 
 #if nodejs
 typedef UdpPacketSender = grig.osc.js.node.UdpPacketSender;
+#elseif python
+typedef UdpPacketSender = grig.osc.python.UdpPacketSender;
 #elseif (target.sys)
 
 import haxe.io.Bytes;
@@ -16,14 +18,13 @@ class UdpPacketSender implements PacketSender
 {
     private var socket = new sys.net.UdpSocket();
     private var address = new Address();
-    private var host:String;
-    private var port:Int;
     private var workerRunner = new WorkerRunner();
 
     public function new(host:String, port:Int)
     {
-        this.host = host;
-        this.port = port;
+        var host = new Host(host);
+        address.host = host.ip;
+        address.port = port;
         workerRunner.start();
     }
 
@@ -32,10 +33,6 @@ class UdpPacketSender implements PacketSender
         return Future.async((callback) -> {
             workerRunner.queue(() -> {
                 try {
-                    var address = new Address();
-                    var host = new Host(host);
-                    address.host = host.ip;
-                    address.port = port;
                     var len = socket.sendTo(packet, 0, packet.length, address);
                     callback(Success(len));
                 } catch (e:haxe.Exception) {

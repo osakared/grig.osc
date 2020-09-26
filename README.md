@@ -14,7 +14,7 @@ Transports/targets supported so far:
 | -------- | ---------- | ---------- | ---------- | --------- |
 | c++      | X          | X          |            | X         |
 | hl       | X          | X          |            | X         |
-| python   |            | X          |            | X         |
+| python   | X          | X          |            | X         |
 | nodejs   | X          | X          |            |           |
 | html/js  |            |            | O (openfl) |           |
 | lua      |            | O          |            |           |
