@@ -1,28 +1,18 @@
-package grig.osc;
-
-#if nodejs
-typedef UdpPacketListener = grig.osc.js.node.UdpPacketListener;
-#elseif python
-typedef UdpPacketListener = grig.osc.python.UdpPacketListener;
-#elseif java
-typedef UdpPacketListener = grig.osc.java.UdpPacketListener;
-#elseif (target.sys)
+package grig.osc.java; #if java
 
 import haxe.io.Bytes;
-import sys.net.Address;
-import sys.net.Host;
+import java.net.DatagramPacket;
+import java.NativeArray;
+import java.StdTypes;
 
-/**
-    Represents a connection to a udp socket and abstracts to platform-specific versions as needed
-**/
-class UdpPacketListener implements PacketListener
+class UdpPacketListener implements grig.osc.PacketListener
 {
-    private var socket = new sys.net.UdpSocket();
+    private var socket = new java.net.DatagramSocket();
     private var loopRunners = new Array<LoopRunner>();
     private var deque = new Deque<Bytes>();
     private var listeners = new Array<(packet:haxe.io.Bytes)->Void>();
     private inline static var BYTES_LENGTH = 2048;
-    private var bytes:Bytes;
+    private var bytes = new NativeArray<Int8>(BYTES_LENGTH);
 
     public function new()
     {
@@ -35,9 +25,8 @@ class UdpPacketListener implements PacketListener
 
     public function bind(host:String, port:Int):Void
     {
-        var host = new Host(host);
-        socket.bind(host, port);
-        bytes = Bytes.alloc(BYTES_LENGTH);
+        var address = new java.net.InetSocketAddress(host, port);
+        socket.bind(address);
         var socketRunner = new LoopRunner(socketLoop, null, () -> {
             socket.close();
         });
@@ -49,10 +38,11 @@ class UdpPacketListener implements PacketListener
 
     private function socketLoop():Void
     {
-        var senderAddress = new Address();
-        socket.waitForRead();
-        var length = socket.readFrom(bytes, 0, BYTES_LENGTH, senderAddress);
-        deque.push(bytes.sub(0, length));
+        var packet = new DatagramPacket(bytes, bytes.length);
+        socket.receive(packet);
+        var length = packet.getLength();
+        var newBytes = Bytes.ofData(bytes);
+        deque.push(newBytes.sub(0, length));
     }
 
     private function callbackLoop():Void
