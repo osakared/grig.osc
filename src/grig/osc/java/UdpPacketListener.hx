@@ -2,12 +2,13 @@ package grig.osc.java; #if java
 
 import haxe.io.Bytes;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.NativeArray;
 import java.StdTypes;
 
 class UdpPacketListener implements grig.osc.PacketListener
 {
-    private var socket = new java.net.DatagramSocket();
+    private var socket:DatagramSocket = null;
     private var loopRunners = new Array<LoopRunner>();
     private var deque = new Deque<Bytes>();
     private var listeners = new Array<(packet:haxe.io.Bytes)->Void>();
@@ -25,8 +26,7 @@ class UdpPacketListener implements grig.osc.PacketListener
 
     public function bind(host:String, port:Int):Void
     {
-        var address = new java.net.InetSocketAddress(host, port);
-        socket.bind(address);
+        socket = new DatagramSocket(port);
         var socketRunner = new LoopRunner(socketLoop, null, () -> {
             socket.close();
         });
