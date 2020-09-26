@@ -6,15 +6,17 @@
     "osc",
     "midi",
     "audio",
-    "sound"
+    "sound",
+    "networking",
+    "udp"
   ],
-  "description": "Cross-target OSC (Open Sound Control) support.",
+  "description": "Cross-target OSC (Open Sound Control) support",
   "classPath": "src",
   "contributors": [
     "thomasjwebb"
   ],
-  "releasenote": "Added fixes for js",
-  "version": "0.0.2",
+  "releasenote": "Added udp transport to python, c# and java targets",
+  "version": "0.0.3",
   "dependencies": {
     "thx.core": "0.44.0",
     "tink_core": "1.20.0"

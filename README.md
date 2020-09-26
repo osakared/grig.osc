@@ -20,7 +20,7 @@ Transports/targets supported so far:
 | lua      |            | O          |            |           |
 | php      |            | O          |            |           |
 | java     | X          | X          |            | X         |
-| c#       |            | X          |            | X         |
+| c#       | X          | X          |            | X         |
 | neko     | X          | X          |            | X         |
 | swf      |            | O (openfl) |            |           |
 
